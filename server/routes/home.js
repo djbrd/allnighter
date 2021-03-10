@@ -1,5 +1,7 @@
+const requireAuth = require("../services/auth").requireAuth;
+
 module.exports = (app) => {
-  app.get("/", (req, res) => {
+  app.get("/", requireAuth, (req, res) => {
     res.send(["wine", "women"]);
   });
 };

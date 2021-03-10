@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const config = require("../config/keys");
+const requireSignin = require("../services/auth").requireSignin;
 
 const tokenForUser = (user) => {
   const timestamp = new Date().getTime();
@@ -37,5 +38,9 @@ module.exports = (app) => {
         res.json({ token: tokenForUser(user) });
       });
     });
+  });
+
+  app.post("/signin", requireSignin, (req, res, next) => {
+    res.json({ token: tokenForUser(req.user) });
   });
 };
