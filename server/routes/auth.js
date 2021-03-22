@@ -24,12 +24,11 @@ module.exports = (app) => {
       }
       // If user exists return error
       if (existingUser) {
-        return res.status(422).send({ error: "Email is in use" });
+        return res.status(422).send({ email: "Email is in use" });
       }
 
       // Else, create and save user record
       const user = new User({ email, password });
-      console.log(user);
       user.save((err) => {
         if (err) {
           return next(err);
