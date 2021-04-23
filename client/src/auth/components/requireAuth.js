@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { selectIsSignedIn } from "../selectors";
 
 const requireAuth = (ChildComponent) => {
   class ComposedComponent extends Component {
@@ -15,6 +16,7 @@ const requireAuth = (ChildComponent) => {
     // Return to index if not authorised
     shouldNavigateAway() {
       if (!this.props.auth) {
+        console.log("pushing back");
         this.props.history.push("/");
       }
     }
@@ -23,7 +25,7 @@ const requireAuth = (ChildComponent) => {
     }
   }
   function mapStateToProps(state) {
-    return { auth: state.auth.authenticated };
+    return { auth: selectIsSignedIn(state) };
   }
   return connect(mapStateToProps)(ComposedComponent);
 };

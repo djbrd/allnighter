@@ -4,7 +4,7 @@ import TextInput from "../inputs/textInput";
 import * as Yup from "yup";
 import axios from "axios";
 import { connect } from "react-redux";
-import { signin } from "../../actions";
+import { signin } from "../../auth/actions";
 
 class Signin extends Component {
   render() {
@@ -24,7 +24,7 @@ class Signin extends Component {
           onSubmit={async (values, actions) => {
             try {
               const res = await axios.post(
-                "http://localhost:3090/signin",
+                `${process.env.REACT_APP_API_URL}/signin`,
                 values
               );
               const { token } = res.data;
