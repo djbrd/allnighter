@@ -31,7 +31,6 @@ export default function LocalSignIn() {
       dispatch(signin(token));
     } catch (e) {
       if (e.response.status === 422) {
-        console.log(e.response);
         for (const fieldKey in e.response.data) {
           const msg = e.response.data[fieldKey];
           setError(fieldKey, { type: "manual", message: msg });
@@ -46,11 +45,11 @@ export default function LocalSignIn() {
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
       <label htmlFor="email">Email</label>
       <input type="text" {...register("email")} />
-      <p>{errors.email?.message}</p>
+      {errors.email && <p>{errors.email.message}</p>}
 
       <label htmlFor="password">Password</label>
       <input type="password" {...register("password")} />
-      <p>{errors.password?.message}</p>
+      {errors.password && <p>{errors.password.message}</p>}
 
       <input type="submit" />
     </form>
