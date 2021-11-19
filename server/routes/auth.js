@@ -1,7 +1,8 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const config = require("../config/keys");
-const requireSignin = require("../services/auth").requireSignin;
+const { requireSignin, requireFacebook } = require("../services/auth");
+const { OAuth2Client } = require("google-auth-library");
 
 const tokenForUser = (user) => {
   const timestamp = new Date().getTime();
@@ -31,7 +32,7 @@ module.exports = (app) => {
       const user = new User({ email, password });
       user.save((err) => {
         if (err) {
-          return next(err);
+          return res.status(422).send({ error: err });
         }
 
         res.json({ token: tokenForUser(user) });
@@ -40,6 +41,32 @@ module.exports = (app) => {
   });
 
   app.post("/signin", requireSignin, (req, res, next) => {
+    res.json({ token: tokenForUser(req.user) });
+  });
+
+  app.post("/auth/google", async (req, res, next) => {
+    const { tokenId } = req.body;
+
+    const client = new OAuth2Client(config.googleClientId);
+    const ticket = await client.verifyIdToken({
+      idToken: tokenId,
+      audience: config.googleClientId,
+    });
+
+    const { email, sub, name, given_name, family_name } = ticket.getPayload();
+    const filter = { email };
+    const update = { googleId: sub };
+
+    let user = await User.findOneAndUpdate(filter, update, {
+      new: true,
+      upsert: true,
+    });
+
+    console.log("Added user: ", user);
+    res.json({ token: tokenForUser(user) });
+  });
+
+  app.post("/auth/facebook", requireFacebook, async (req, res, next) => {
     res.json({ token: tokenForUser(req.user) });
   });
 };

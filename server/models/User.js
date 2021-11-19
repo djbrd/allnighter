@@ -5,13 +5,17 @@ const bcrypt = require("bcrypt");
 const userSchema = new Schema({
   email: { type: String, unique: true, lowercase: true },
   password: String,
+  googleId: String,
+  facebookId: String,
 });
 
 // On save hook, encrypt password
 userSchema.pre("save", function (next) {
   const user = this;
-
-  console.log(this);
+  if (!user.password) {
+    console.log("User has no password");
+    return next();
+  }
 
   bcrypt.genSalt(10, (err, salt) => {
     if (err) {

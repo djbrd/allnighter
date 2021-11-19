@@ -1,9 +1,10 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const keys = require("./config/keys");
 const cors = require("cors");
+
+require("dotenv").config();
 
 mongoose.connect(keys.mongoURI);
 
@@ -11,12 +12,21 @@ const app = express();
 
 // app setup
 app.use(morgan("combined"));
-// TODO - restrict to particular url
+// TODO - restrict cors to particular url
 app.use(cors());
-app.use(bodyParser.json({ type: "*/*" }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 require("./routes/home")(app);
 require("./routes/auth")(app);
+
+app.use("/books", require("./routes/books"));
+app.use("/parts", require("./routes/parts"));
+app.use("/chapters", require("./routes/chapters"));
+
+app.use((err, req, res, next) => {
+  res.status(422).send({ error: err.message, stack: err.stack });
+});
 
 // server setup
 const port = process.env.PORT || 3090;

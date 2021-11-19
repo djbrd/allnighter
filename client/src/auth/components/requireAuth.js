@@ -16,7 +16,6 @@ const requireAuth = (ChildComponent) => {
     // Return to index if not authorised
     shouldNavigateAway() {
       if (!this.props.auth) {
-        console.log("pushing back");
         this.props.history.push("/");
       }
     }

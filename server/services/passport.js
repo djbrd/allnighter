@@ -4,6 +4,7 @@ const config = require("../config/keys");
 const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 const LocalStrategy = require("passport-local");
+const FacebookTokenStrategy = require("passport-facebook-token");
 
 // Indicate to passport that the username field is 'email' (not default 'username')
 const localOptions = { usernameField: "email" };
@@ -53,6 +54,27 @@ const jwtLogin = new JwtStrategy(jwtOptions, (payload, done) => {
   });
 });
 
+const facebookStrategy = new FacebookTokenStrategy(
+  {
+    clientID: config.facebookAppId,
+    clientSecret: config.facebookAppSecret,
+    fbGraphVersion: "v3.0",
+  },
+  async (accessToken, refreshToken, profile, done) => {
+    console.log(profile);
+    const filter = { facebookId: profile.id };
+    const update = { email: profile._json.email };
+
+    let user = await User.findOneAndUpdate(filter, update, {
+      new: true,
+      upsert: true,
+    });
+
+    return done(null, user);
+  }
+);
+
 // Tell passport to use strategies
 passport.use(jwtLogin);
 passport.use(localLogin);
+passport.use(facebookStrategy);

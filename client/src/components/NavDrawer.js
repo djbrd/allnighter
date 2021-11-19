@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
 
 const routes = [
   { label: "Home", path: "/" },
-  { label: "Chapter", path: "/chapter" },
+  { label: "Content", path: "/content" },
 ];
 
 const NavDrawer = (props) => {

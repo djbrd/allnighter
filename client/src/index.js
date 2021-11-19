@@ -9,6 +9,7 @@ import App from "./components/App";
 import reducers from "./reducers";
 
 import { authInit } from "./auth/actions";
+import { contentInit } from "./books/actions";
 
 const composedEnhancer = composeWithDevTools(applyMiddleware(thunkMiddleware));
 
@@ -23,3 +24,4 @@ ReactDOM.render(
 
 // Initialise authentication
 store.dispatch(authInit());
+store.dispatch(contentInit());

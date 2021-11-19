@@ -5,14 +5,16 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
 import NavDrawer from "./NavDrawer";
-import AuthModal from "../auth/components/AuthModal";
+import AuthButton from "../auth/components/AuthButton";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+  },
+  title: {
+    margin: "0 auto",
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -21,34 +23,28 @@ const useStyles = makeStyles((theme) => ({
 
 const Header = () => {
   const classes = useStyles();
-
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
 
   return (
-    // <div>
-    //   <Link to="/">Redux Auth</Link>
-    //   <AuthLink />
-    // </div>
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="fixed" color="default" elevation={0}>
         <Toolbar>
           <IconButton
             edge="start"
             color="inherit"
-            classes="menuButton"
+            className={classes.menuButton}
             onClick={() => setDrawerOpen(true)}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6">all-nighter</Typography>
-          <IconButton color="inherit" onClick={() => setModalOpen(true)}>
-            <AccountCircleIcon />
-          </IconButton>
+          <Typography className={classes.title} variant="caption">
+            all-nighter
+          </Typography>
+          <AuthButton />
         </Toolbar>
       </AppBar>
+      <Toolbar />
       <NavDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
-      <AuthModal open={modalOpen} onClose={() => setModalOpen(false)} />
     </div>
   );
 };

@@ -1,0 +1,19 @@
+export const INIT_CONTENT = "init_content";
+export const CREATE_BOOK = "create_book";
+export const CREATE_PART = "create_part";
+export const DELETE_PART = "delete_part";
+export const CREATE_CHAPTER = "create_chapter";
+export const DELETE_CHAPTER = "delete_chapter";
+export const CREATE_CHAPTER_AUDIO = "create_chapter_audio";
+export const DELETE_CHAPTER_AUDIO = "delete_chapter_audio";
+export const INIT_CHAPTER_BODY = "init_chapter_body";
+export const CLEAR_SENTENCE_START_TIMES = "clear_sentence_start_times";
+export const SET_SENTENCE_START_TIME = "set_sentence_start_time";
+export const SPLIT_SENTENCE = "split_sentence";
+export const MERGE_SENTENCES = "merge_sentences";
+
+export const START_READING = "start_reading"
+export const STOP_READING = "stop_reading"
+export const NEXT_SENTENCE = "next_sentence"
+export const PREVIOUS_SENTENCE = "previous_sentence"
+export const SET_SENTENCE = "set_sentence"

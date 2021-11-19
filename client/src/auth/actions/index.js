@@ -2,11 +2,31 @@ import axios from "axios";
 
 import { loadScript } from "../../utils";
 
-import { SIGNED_IN, SIGNED_OUT } from "./types";
+import {
+  INITIALISING_AUTH,
+  SIGNED_IN,
+  SIGNED_OUT,
+  SIGNING_IN,
+  SIGNING_IN_ERROR,
+  SIGNING_OUT,
+} from "./types";
 
 export const authInit = () => async (dispatch) => {
   dispatch(googleAuthInit());
   dispatch(facebookAuthInit());
+};
+
+export const signing = () => {
+  return {
+    type: SIGNING_IN,
+  };
+};
+
+export const signingError = (errorMessage) => {
+  return {
+    type: SIGNING_IN_ERROR,
+    payload: { errorMessage },
+  };
 };
 
 const registerToken = (token) => {
@@ -23,19 +43,21 @@ export const signin = (token) => registerToken(token);
 
 export const signout = () => async (dispatch, getState) => {
   localStorage.removeItem("token");
+  dispatch({ type: SIGNING_OUT });
   const { google, facebook } = getState().auth;
   if (google) {
-    const res = await window.gapi.auth2.getAuthInstance().signOut();
+    await window.gapi.auth2.getAuthInstance().signOut();
   } else if (facebook) {
     await new Promise(window.FB.logout);
     dispatch({ type: SIGNED_OUT, payload: "facebook" });
   } else {
-    await new Promise((r) => setTimeout(r, 1000));
+    await new Promise((r) => setTimeout(r, 5000));
     dispatch({ type: SIGNED_OUT });
   }
 };
 
 export const googleAuthInit = () => async (dispatch) => {
+  dispatch({ type: INITIALISING_AUTH, payload: "google" });
   await loadScript("https://apis.google.com/js/api.js");
 
   // Used on initialisation and to listen to any changes
@@ -44,6 +66,7 @@ export const googleAuthInit = () => async (dispatch) => {
     if (authClient.isSignedIn.get()) {
       dispatch(googleSignedIn(authClient.currentUser.get().getAuthResponse()));
     } else {
+      console.log("Signed out of google");
       dispatch({ type: SIGNED_OUT, payload: "google" });
     }
   };
@@ -67,22 +90,32 @@ export const googleAuthInit = () => async (dispatch) => {
 };
 
 // Get a token from the server
-export const googleSignedIn = ({ id_token }) => async (dispatch) => {
-  const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/google`, {
-    tokenId: id_token,
-  });
-  const { token } = res.data;
-  dispatch({ type: SIGNED_IN, payload: { jwtToken: token, google: true } });
-};
+export const googleSignedIn =
+  ({ id_token }) =>
+  async (dispatch) => {
+    const res = await axios.post(
+      `${process.env.REACT_APP_API_URL}/auth/google`,
+      {
+        tokenId: id_token,
+      }
+    );
+    const { token } = res.data;
+    dispatch({ type: SIGNED_IN, payload: { jwtToken: token, google: true } });
+  };
 
 // Retrieval of token from server is handled by callback at window level
 export const googleSignIn = () => async (dispatch) => {
-  // Todo: add submitting
-  await window.gapi.auth2.getAuthInstance().signIn();
-  // Todo: catch error
+  dispatch(signing());
+  try {
+    await window.gapi.auth2.getAuthInstance().signIn();
+  } catch (err) {
+    dispatch(signingError(err.error));
+  }
 };
 
 export const facebookAuthInit = () => async (dispatch) => {
+  dispatch({ type: INITIALISING_AUTH, payload: "facebook" });
+
   // Add async callback used by Facebook to window
   window.fbAsyncInit = () => {
     window.FB.init({
@@ -105,22 +138,27 @@ export const facebookAuthInit = () => async (dispatch) => {
 };
 
 // Use access token to retrieve a jwt token from api
-export const facebookSignedIn = ({ accessToken }) => async (dispatch) => {
-  const res = await axios.post(
-    `${process.env.REACT_APP_API_URL}/auth/facebook`,
-    {
-      access_token: accessToken,
-    }
-  );
-  const { token } = res.data;
-  dispatch({ type: SIGNED_IN, payload: { jwtToken: token, facebook: true } });
-};
+export const facebookSignedIn =
+  ({ accessToken }) =>
+  async (dispatch) => {
+    const res = await axios.post(
+      `${process.env.REACT_APP_API_URL}/auth/facebook`,
+      {
+        access_token: accessToken,
+      }
+    );
+    const { token } = res.data;
+    dispatch({ type: SIGNED_IN, payload: { jwtToken: token, facebook: true } });
+  };
 
 export const facebookSignIn = () => async (dispatch) => {
-  const { authResponse } = await new Promise(window.FB.login);
-  if (authResponse) {
-    dispatch(facebookSignedIn(authResponse));
+  dispatch(signing());
+  try {
+    const { authResponse } = await new Promise(window.FB.login);
+    if (authResponse) {
+      dispatch(facebookSignedIn(authResponse));
+    }
+  } catch (err) {
+    dispatch(signingError(err));
   }
-
-  // Todo: handle error
 };
