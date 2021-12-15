@@ -17,7 +17,6 @@ const useAudio = (src) => {
 
   const startPlayback = () => {
     audioRef.current.play();
-    setPlaybackState(PLAYBACK_PLAYING);
   };
 
   const pausePlayback = () => {
@@ -27,20 +26,51 @@ const useAudio = (src) => {
 
   useEffect(() => {
     const audio = audioRef.current;
-    const onCanPlay = (event) => {
-      console.log("CAN PLAY");
+    const onCanPlay = () => {
       setPlaybackState(PLAYBACK_READY);
     };
     audio.addEventListener("canplay", onCanPlay);
 
-    const onEnded = (event) => {
+    const onEnded = () => {
       setPlaybackState(PLAYBACK_ENDED);
     };
     audio.addEventListener("ended", onEnded);
 
+    const onSeeking = () => {
+      setPlaybackState(PLAYBACK_LOADING);
+    };
+    audio.addEventListener("seeking", onSeeking);
+
+    const onPlaying = () => {
+      setPlaybackState(PLAYBACK_PLAYING);
+    };
+    audio.addEventListener("playing", onPlaying);
+
+    // for debugging
+    // const consoleLogEvent = (event) => console.log(event.type);
+    // const events = [
+    //   "audioprocess",
+    //   "canplaythrough",
+    //   "play",
+    //   "playing",
+    //   "seeked",
+    //   "seeking",
+    //   "stalled",
+    //   "waiting",
+    // ];
+
+    // events.forEach((event) => {
+    //   audio.addEventListener(event, consoleLogEvent);
+    // });
+
     return () => {
       audio.removeEventListener("canplay", onCanPlay);
       audio.removeEventListener("ended", onEnded);
+      audio.removeEventListener("seeking", onSeeking);
+      audio.addEventListener("playing", onPlaying);
+      // events.forEach((event) => {
+      //   audio.removeEventListener(event, consoleLogEvent);
+      // });
     };
   }, []);
 

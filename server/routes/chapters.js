@@ -208,7 +208,6 @@ chapters.get("/:chapterId/audio", async (req, res) => {
       };
       res.writeHead(200, head);
       const readStream = s3.getObject(params).createReadStream();
-      readStream.on("end", () => console.log("Read stream is done 200"));
       readStream.pipe(res);
     }
   } catch (err) {

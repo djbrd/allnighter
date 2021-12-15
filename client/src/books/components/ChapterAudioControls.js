@@ -28,7 +28,6 @@ import {
   PLAYBACK_READY,
   PLAYBACK_PLAYING,
   PLAYBACK_ENDED,
-  //PLAYBACK_ENDED,
 } from "../hooks/playbackStates";
 
 const ChapterAudioControls = (props) => {
@@ -51,7 +50,7 @@ const ChapterAudioControls = (props) => {
   const activeSentenceIdx = useSelector(selectReadingSentenceIdx);
 
   useEffect(() => {
-    if (syncingText) {
+    if (syncingText && playbackState === PLAYBACK_PLAYING) {
       if (
         sentenceStartTimes.length &&
         sentenceStartTimes.length > activeSentenceIdx + 1
@@ -71,9 +70,11 @@ const ChapterAudioControls = (props) => {
   }, [
     activeSentenceIdx,
     syncingText,
+    playbackState,
     sentenceStartTimes,
     dispatch,
     getPlaybackTime,
+    setPlaybackTime,
   ]);
 
   // Stop when the audio has ended
@@ -125,17 +126,20 @@ const ChapterAudioControls = (props) => {
 
   return (
     <Grid container direction="row" justify="center" alignItems="center">
-      {(playbackState === PLAYBACK_PLAYING && syncingText) ? (
-      <Button onClick={pause}>
-        <PauseIcon />
-      </Button>
+      {playbackState === PLAYBACK_PLAYING && syncingText ? (
+        <Button onClick={pause}>
+          <PauseIcon />
+        </Button>
       ) : (
-      <Button
-        onClick={play}
-        disabled={playbackState !== PLAYBACK_READY || (playbackState === PLAYBACK_PLAYING && !syncingText)}
-      >
-        <PlayArrowIcon />
-      </Button>
+        <Button
+          onClick={play}
+          disabled={
+            playbackState !== PLAYBACK_READY ||
+            (playbackState === PLAYBACK_PLAYING && !syncingText)
+          }
+        >
+          <PlayArrowIcon />
+        </Button>
       )}
       <Button onClick={toStart}>
         <SkipPreviousIcon />

@@ -61,7 +61,6 @@ const facebookStrategy = new FacebookTokenStrategy(
     fbGraphVersion: "v3.0",
   },
   async (accessToken, refreshToken, profile, done) => {
-    console.log(profile);
     const filter = { facebookId: profile.id };
     const update = { email: profile._json.email };
 

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -7,7 +7,9 @@ import { Typography } from "@material-ui/core";
 import {
   selectChapterParagraphs,
   selectReadingSentenceIdx,
+  selectSentenceStartTimes,
 } from "../selectors";
+import { setSentence } from "../actions";
 
 const useStyles = makeStyles((theme) => ({
   activeSentence: {
@@ -16,9 +18,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Sentence = (props) => {
-  const { active, addSpace, text } = props;
+  const { active, addSpace, text, sentenceId, startTime, setPlaybackTime } =
+    props;
   const sentenceRef = useRef(null);
   const classes = useStyles();
+
+  const dispatch = useDispatch();
 
   // Scroll the sentence to be visible when it's active
   useEffect(() => {
@@ -32,9 +37,21 @@ const Sentence = (props) => {
     }
   }, [active]);
 
+  // Make sentence active when it's clicked
+  const onClick = () => {
+    if (startTime !== null) {
+      setPlaybackTime(startTime);
+      dispatch(setSentence(sentenceId));
+    }
+  };
+
   return (
     <>
-      <span ref={sentenceRef} className={active ? classes.activeSentence : ""}>
+      <span
+        ref={sentenceRef}
+        className={active ? classes.activeSentence : ""}
+        onClick={onClick}
+      >
         {text}
       </span>
       {addSpace ? " " : ""}
@@ -42,12 +59,15 @@ const Sentence = (props) => {
   );
 };
 
-const ChapterBodyScroll = () => {
+const ChapterBodyScroll = ({ setPlaybackTime }) => {
   const { chapterId } = useParams();
   const paragraphs = useSelector((state) =>
     selectChapterParagraphs(state, chapterId)
   );
   const activeSentenceIdx = useSelector(selectReadingSentenceIdx);
+  const sentenceStartTimes = useSelector((state) =>
+    selectSentenceStartTimes(state, chapterId)
+  );
 
   let sentenceCount = 0;
 
@@ -59,10 +79,17 @@ const ChapterBodyScroll = () => {
             {sentences.map((sentence, index) => {
               return (
                 <Sentence
+                  startTime={
+                    sentenceStartTimes.length > sentenceCount
+                      ? sentenceStartTimes[sentenceCount]
+                      : null
+                  }
                   key={"sentence_" + sentenceCount++}
                   text={sentence}
                   active={activeSentenceIdx === sentenceCount}
+                  sentenceId={sentenceCount}
                   addSpace={index !== sentences.length - 1}
+                  setPlaybackTime={setPlaybackTime}
                 />
               );
             })}

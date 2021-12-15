@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import Drawer from "@material-ui/core/Drawer";
 
+import ChapterBodyScroll from "./ChapterBodyScroll";
 import ChapterAudioControls from "./ChapterAudioControls";
 import ChapterAudioSync from "./ChapterAudioSync";
 
@@ -17,21 +18,24 @@ const ChapterAudio = () => {
   } = useAudio(`${process.env.REACT_APP_API_URL}/chapters/${chapterId}/audio`);
 
   return (
-    <Drawer variant="persistent" anchor="bottom" open={true}>
-      <ChapterAudioControls
-        startPlayback={startPlayback}
-        pausePlayback={pausePlayback}
-        setPlaybackTime={setPlaybackTime}
-        getPlaybackTime={getPlaybackTime}
-        playbackState={playbackState}
-      />
-      <ChapterAudioSync
-        startPlayback={startPlayback}
-        pausePlayback={pausePlayback}
-        getPlaybackTime={getPlaybackTime}
-        playbackState={playbackState}
-      />
-    </Drawer>
+    <>
+      <ChapterBodyScroll setPlaybackTime={setPlaybackTime} />
+      <Drawer variant="persistent" anchor="bottom" open={true}>
+        <ChapterAudioControls
+          startPlayback={startPlayback}
+          pausePlayback={pausePlayback}
+          setPlaybackTime={setPlaybackTime}
+          getPlaybackTime={getPlaybackTime}
+          playbackState={playbackState}
+        />
+        <ChapterAudioSync
+          startPlayback={startPlayback}
+          pausePlayback={pausePlayback}
+          getPlaybackTime={getPlaybackTime}
+          playbackState={playbackState}
+        />
+      </Drawer>
+    </>
   );
 };
 
