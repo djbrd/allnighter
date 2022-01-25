@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": { backgroundColor: "#DB4437" },
     color: "white",
     textTransform: "none",
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(2),
   },
 }));
 

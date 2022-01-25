@@ -13,7 +13,7 @@ import { selectIsAuthorising } from "../selectors";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    marginTop: theme.spacing(2),
+    margin: theme.spacing(2, 0, 2),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
   or: {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(1),
   },
 }));
 

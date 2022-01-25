@@ -16,7 +16,6 @@ const { bodyToParagraphs } = require("../services/chapter");
 
 chapters.get("/", async (req, res) => {
   const chapters = await Chapter.find();
-  //console.log("Memory usage: ", process.memoryUsage());
   res.status(200).send({ chapters });
 });
 
@@ -32,26 +31,36 @@ chapters.get("/:chapterId", async (req, res, next) => {
   }
 });
 
-chapters.patch("/:chapterId", async (req, res, next) => {
+const upload = multer({
+  storage: multer.memoryStorage(),
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype === "text/plain") {
+      cb(null, true);
+    } else {
+      return cb(new Error("Only .txt format allowed"), false);
+    }
+  },
+  limits: { fileSize: 20 * 1024 * 1024, fieldNameSize: 127 },
+});
+
+chapters.patch("/:chapterId", upload.single("body"), async (req, res, next) => {
   try {
     const chapter = await Chapter.findById(req.params.chapterId);
     if (chapter === null) {
       return res.status(404).send({ message: "Cannot find chapter" });
     }
 
-    const { title, body, paragraphs, sentenceStartTimes } = req.body;
+    const { title, paragraphs, sentenceStartTimes } = req.body;
     if (title) {
       chapter.title = title;
     }
-    if (body) {
+    if (req.file) {
+      const body = req.file.buffer.toString();
       chapter.body = body;
-      if (!paragraphs) {
-        chapter.paragraphs = bodyToParagraphs(body)
-      }
-    }
-    if (paragraphs) {
+      chapter.paragraphs = bodyToParagraphs(body);
+    } else if (paragraphs) {
       chapter.paragraphs = paragraphs;
-    } 
+    }
     if (sentenceStartTimes) {
       chapter.sentenceStartTimes = sentenceStartTimes;
     }
@@ -65,7 +74,6 @@ chapters.patch("/:chapterId", async (req, res, next) => {
 
 chapters.delete("/:chapterId", async (req, res, next) => {
   const chapterId = req.params.chapterId;
-
   try {
     // Remove from part
     const part = await Part.findOneAndUpdate(

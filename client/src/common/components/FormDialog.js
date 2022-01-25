@@ -10,19 +10,20 @@ const useStyles = makeStyles((theme) => ({
     "& form": {
       width: "100%",
     },
+    margin: theme.spacing(2, 0, 2),
   },
 }));
 
 const FormDialog = (props) => {
-  const { children, open, onClose, disableClose } = props;
+  const { children, open, onClose } = props;
   const classes = useStyles();
 
   return (
     <Dialog
       open={open}
       onClose={onClose}
-      disableBackdropClick={disableClose}
-      disableEscapeKeyDown={disableClose}
+      // disableBackdropClick={disableClose}
+      // disableEscapeKeyDown={disableClose}
       fullWidth
       maxWidth="xs"
     >

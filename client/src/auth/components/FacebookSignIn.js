@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": { backgroundColor: "#4267B2" }, // Facebook blue
     color: "white",
     textTransform: "none",
-    margin: theme.spacing(1, 0, 4),
+    margin: theme.spacing(1),
   },
 }));
 

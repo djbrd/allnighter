@@ -16,6 +16,7 @@ import {
   SET_SENTENCE_START_TIME,
   SPLIT_SENTENCE,
   MERGE_SENTENCES,
+  CREATE_CHAPTER_BODY,
 } from "../actions/types";
 
 const INITIAL_STATE = {
@@ -66,6 +67,13 @@ const content = produce((draft, action = {}) => {
       delete draft.chapters.chapterId;
       break;
     }
+    case CREATE_CHAPTER_BODY: {
+      const { chapter } = action.payload;
+      console.log(draft.chapters);
+      console.log(chapter._id);
+      draft.chapters[chapter._id] = chapter;
+      break;
+    }
     case CREATE_CHAPTER_AUDIO: {
       const { chapterId } = action.payload;
       draft.chapters[chapterId].audio = true;
@@ -94,8 +102,7 @@ const content = produce((draft, action = {}) => {
       const numTimes = draft.chapters[chapterId].sentenceStartTimes.length;
       if (numTimes < sentenceIdx) {
         throw new Error("Trying to add a sentence start time too late");
-      }
-      else if (numTimes === sentenceIdx) {
+      } else if (numTimes === sentenceIdx) {
         draft.chapters[chapterId].sentenceStartTimes.push(time);
       } else {
         draft.chapters[chapterId].sentenceStartTimes[sentenceIdx] = time;

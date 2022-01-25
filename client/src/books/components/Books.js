@@ -27,7 +27,7 @@ const BookListItem = (props) => {
   return (
     <>
       <ListItem button onClick={() => setOpen(!open)}>
-        <ListItemText>{book.title}</ListItemText>
+        <ListItemText primary={book.title} />
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
       <Collapse in={open} timeout="auto" unmountOnExit>
@@ -43,12 +43,12 @@ const Books = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="sm">
       {!isContentInitialised ? (
         <CircularProgress />
       ) : (
         <>
-          <List component="div">
+          <List dense component="div">
             {books.map((book) => (
               <BookListItem book={book} key={book._id} />
             ))}

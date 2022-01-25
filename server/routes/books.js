@@ -9,7 +9,7 @@ books.get("/", async (req, res) => {
   const books = await Book.find().populate({
     path: "parts",
     select: "_id title",
-    populate: { path: "chapters", select: "_id title audio" },
+    populate: { path: "chapters", select: "_id title audio body" },
   });
   res.status(200).send({ books });
 });

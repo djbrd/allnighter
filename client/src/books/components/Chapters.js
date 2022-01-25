@@ -12,21 +12,23 @@ import IconButton from "@material-ui/core/IconButton";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import DeleteIcon from "@material-ui/icons/Delete";
 import RecordVoiceOverIcon from "@material-ui/icons/RecordVoiceOver";
-import VoiceOverOffIcon from "@material-ui/icons/VoiceOverOff";
 import SyncIcon from "@material-ui/icons/Sync";
 import ReorderIcon from "@material-ui/icons/Reorder";
+import PublishIcon from "@material-ui/icons/Publish";
 
+import FormDialog from "../../common/components/FormDialog";
+import ConfirmDialog from "../../common/components/ConfirmDialog";
 import ChapterForm from "./ChapterForm.js";
 import ChapterAudioForm from "./ChapterAudioForm.js";
-import ConfirmDialog from "../../common/components/ConfirmDialog";
-import { deleteChapter, deleteChapterAudio } from "../actions";
+import { deleteChapter } from "../actions";
 import { selectChaptersOfPart } from "../selectors";
+import ChapterBodyForm from "./ChapterBodyForm";
 
 const ChapterListItem = (props) => {
   const { chapter, partId } = props;
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const [confirmAudioOpen, setConfirmAudioOpen] = useState(false);
+  const [bodyOpen, setBodyOpen] = useState(false);
   const [audioOpen, setAudioOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const dispatch = useDispatch();
 
   const onConfirmDelete = async () => {
@@ -41,47 +43,44 @@ const ChapterListItem = (props) => {
     }
   };
 
-  const onConfirmDeleteAudio = async () => {
-    try {
-      await axios.delete(
-        `${process.env.REACT_APP_API_URL}/chapters/${chapter._id}/audio`
-      );
-      dispatch(deleteChapterAudio(chapter._id));
-    } catch (err) {
-      // TODO
-      console.log(err);
-    }
-  };
-
   return (
     <>
       <ListItem>
-        <ListItemText>{chapter.title}</ListItemText>
-        <IconButton
-          size="small"
-          component={Link}
-          to={`/chapterbreath/${chapter._id}`}
-        >
-          <ReorderIcon />
-        </IconButton>
-        {chapter.audio ? (
-          <>
-            <IconButton size="small" component={Link} to={`/chapter/${chapter._id}`}>
-              <SyncIcon />
-            </IconButton>
-            <IconButton size="small" onClick={() => setConfirmAudioOpen(true)}>
-              <VoiceOverOffIcon />
-            </IconButton>
-          </>
-        ) : (
-          <IconButton size="small" onClick={() => setAudioOpen(true)}>
-            <RecordVoiceOverIcon />
+        <ListItemText primary={chapter.title} />
+        {chapter.body && (
+          <IconButton
+            size="small"
+            component={Link}
+            to={`/chapterbreath/${chapter._id}`}
+          >
+            <ReorderIcon />
           </IconButton>
         )}
+        <IconButton size="small" onClick={() => setBodyOpen(true)}>
+          <PublishIcon />
+        </IconButton>
+        {chapter.audio && (
+          <IconButton
+            size="small"
+            component={Link}
+            to={`/chapter/${chapter._id}`}
+          >
+            <SyncIcon />
+          </IconButton>
+        )}
+        <IconButton size="small" onClick={() => setAudioOpen(true)}>
+          <RecordVoiceOverIcon />
+        </IconButton>
         <IconButton size="small" onClick={() => setConfirmOpen(true)}>
           <DeleteIcon />
         </IconButton>
       </ListItem>
+      <FormDialog open={bodyOpen} onClose={() => setBodyOpen(false)}>
+        <ChapterBodyForm
+          chapterId={chapter._id}
+          onClose={() => setBodyOpen(false)}
+        />
+      </FormDialog>
       <ChapterAudioForm
         chapterId={chapter._id}
         open={audioOpen}
@@ -94,14 +93,6 @@ const ChapterListItem = (props) => {
         onConfirm={onConfirmDelete}
       >
         Confirm deletion of chapter?
-      </ConfirmDialog>
-      <ConfirmDialog
-        title="Delete Chapter Audio?"
-        open={confirmAudioOpen}
-        onClose={() => setConfirmAudioOpen(false)}
-        onConfirm={onConfirmDeleteAudio}
-      >
-        Confirm deletion of chapter's audio?
       </ConfirmDialog>
     </>
   );
@@ -124,7 +115,7 @@ const Chapters = (props) => {
 
   return (
     <>
-      <List component="div" className={classes.doubleNested}>
+      <List dense component="div" className={classes.doubleNested}>
         <div className={classes.insideList}>
           {chapters.map((chapter) => (
             <ChapterListItem
@@ -142,11 +133,9 @@ const Chapters = (props) => {
           </ListItemAvatar>
         </ListItem>
       </List>
-      <ChapterForm
-        partId={part._id}
-        open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-      />
+      <FormDialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+        <ChapterForm partId={part._id} onClose={() => setDialogOpen(false)} />
+      </FormDialog>
     </>
   );
 };

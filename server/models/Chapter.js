@@ -7,7 +7,7 @@ const chapterSchema = new mongoose.Schema({
   },
   body: {
     type: String,
-    required: true,
+    default: "",
   },
   paragraphs: {
     type: [[String]],

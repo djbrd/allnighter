@@ -83,16 +83,19 @@ const upload = multer({
 // Add new chapter to a part
 parts.post("/:id/chapter", upload.single("body"), async (req, res, next) => {
   try {
-    if (!req.file) {
-      return res.status(422).send({ error: "File is required" });
-    }
+    // if (!req.file) {
+    //   return res.status(422).send({ error: "File is required" });
+    // }
 
-    const body = req.file.buffer.toString();
     let newChapter = {
       title: req.body.title,
-      body,
-      paragraphs: bodyToParagraphs(body),
     };
+
+    if (req.file) {
+      const body = req.file.buffer.toString();
+      newChapter.body = body;
+      newChapter.paragraphs = bodyToParagraphs(body);
+    }
     const chapter = await Chapter.create(newChapter);
 
     // Add reference to book

@@ -16,6 +16,12 @@ const useStyles = makeStyles((theme) => ({
   selectFile: {
     textTransform: "none",
   },
+  submit: {
+    margin: theme.spacing(1, 0, 1),
+  },
+  errorMessage: {
+    color: "red",
+  },
 }));
 
 const MAX_FILE_SIZE_MB = 20;
@@ -46,7 +52,7 @@ const ChapterAudioForm = (props) => {
     setValue,
     formState: { errors, isSubmitting },
   } = useForm({
-    defaultValues: { title: "" },
+    defaultValues: { audio: null },
     resolver: yupResolver(schema),
   });
   const dispatch = useDispatch();
@@ -107,10 +113,13 @@ const ChapterAudioForm = (props) => {
             </Button>
           </label>
         )}
-        {errors.audio && <span>{errors.audio.message}</span>}
+        {errors.audio && (
+          <span className={classes.errorMessage}>{errors.audio.message}</span>
+        )}
         <Button
           type="submit"
           variant="contained"
+          className={classes.submit}
           color="primary"
           fullWidth
           disabled={isSubmitting}

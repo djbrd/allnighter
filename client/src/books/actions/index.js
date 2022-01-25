@@ -7,6 +7,7 @@ import {
   DELETE_PART,
   CREATE_CHAPTER,
   DELETE_CHAPTER,
+  CREATE_CHAPTER_BODY,
   CREATE_CHAPTER_AUDIO,
   DELETE_CHAPTER_AUDIO,
   INIT_CHAPTER_BODY,
@@ -58,6 +59,13 @@ export const deleteChapter = (partId, chapterId) => {
   return {
     type: DELETE_CHAPTER,
     payload: { partId, chapterId },
+  };
+};
+
+export const createChapterBody = (chapter) => {
+  return {
+    type: CREATE_CHAPTER_BODY,
+    payload: { chapter },
   };
 };
 

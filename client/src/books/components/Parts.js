@@ -42,7 +42,7 @@ const PartListItem = (props) => {
   return (
     <>
       <ListItem button onClick={() => setOpen(!open)}>
-        <ListItemText>{part.title}</ListItemText>
+        <ListItemText primary={part.title} />
         <IconButton onClick={() => setConfirmOpen(true)} disabled={deleting}>
           <DeleteIcon />
         </IconButton>
@@ -80,7 +80,7 @@ const Parts = (props) => {
 
   return (
     <>
-      <List component="div" className={classes.nested}>
+      <List dense component="div" className={classes.nested}>
         <div className={classes.insideList}>
           {parts.map((part) => (
             <PartListItem part={part} bookId={book._id} key={part._id} />
