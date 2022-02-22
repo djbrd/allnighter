@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 
 import { Button, Grid } from "@material-ui/core";
 
@@ -27,7 +26,9 @@ import {
   PLAYBACK_ENDED,
 } from "../hooks/playbackStates";
 
-const ChapterAudioSync = (props) => {
+import { api } from "../../utils/api";
+
+const SyncControls = (props) => {
   const { chapterId } = useParams();
   const { getPlaybackTime, startPlayback, pausePlayback, playbackState } =
     props;
@@ -49,10 +50,7 @@ const ChapterAudioSync = (props) => {
 
     const persistSentenceStartTimes = async () => {
       try {
-        await axios.patch(
-          `${process.env.REACT_APP_API_URL}/chapters/${chapterId}`,
-          { sentenceStartTimes }
-        );
+        await api.patch(`/chapters/${chapterId}`, { sentenceStartTimes });
       } catch (err) {
         // TODO
         console.log(err);
@@ -106,4 +104,4 @@ const ChapterAudioSync = (props) => {
   );
 };
 
-export default ChapterAudioSync;
+export default SyncControls;

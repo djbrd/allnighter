@@ -1,22 +1,14 @@
 import { useParams } from "react-router-dom";
-// import { useSelector } from "react-redux";
 import Drawer from "@material-ui/core/Drawer";
 
 import ChapterLayout from "./ChapterLayout";
 import ChapterBodyScroll from "./ChapterBodyScroll";
-import AudioControls from "./AudioControls";
+import SyncControls from "./SyncControls";
 
 import useAudio from "../hooks/useAudio";
-//import { selectChapterId } from "../selectors";
 
-const Audio = () => {
-  // const { partIdx, chapterIdx } = useParams();
-  // const chapterId = useSelector((state) =>
-  //   selectChapterId(state, partIdx, chapterIdx)
-  // );
-
+const Sync = () => {
   const { chapterId } = useParams();
-
   const {
     setPlaybackTime,
     getPlaybackTime,
@@ -32,10 +24,9 @@ const Audio = () => {
         getPlaybackTime={getPlaybackTime}
       />
       <Drawer variant="persistent" anchor="bottom" open={true}>
-        <AudioControls
+        <SyncControls
           startPlayback={startPlayback}
           pausePlayback={pausePlayback}
-          setPlaybackTime={setPlaybackTime}
           getPlaybackTime={getPlaybackTime}
           playbackState={playbackState}
         />
@@ -44,15 +35,12 @@ const Audio = () => {
   );
 };
 
-// Wrap the above component in ChapterLayout to handle initialising of content
-const ChapterAudio = () => {
+const ChapterSync = () => {
   return (
-    <>
-      <ChapterLayout>
-        <Audio />
-      </ChapterLayout>
-    </>
+    <ChapterLayout>
+      <Sync />
+    </ChapterLayout>
   );
 };
 
-export default ChapterAudio;
+export default ChapterSync;

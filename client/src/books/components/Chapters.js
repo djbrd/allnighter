@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
 
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
@@ -15,6 +14,7 @@ import RecordVoiceOverIcon from "@material-ui/icons/RecordVoiceOver";
 import SyncIcon from "@material-ui/icons/Sync";
 import ReorderIcon from "@material-ui/icons/Reorder";
 import PublishIcon from "@material-ui/icons/Publish";
+import BookIcon from "@material-ui/icons/Book";
 
 import FormDialog from "../../common/components/FormDialog";
 import ConfirmDialog from "../../common/components/ConfirmDialog";
@@ -23,6 +23,8 @@ import ChapterAudioForm from "./ChapterAudioForm.js";
 import { deleteChapter } from "../actions";
 import { selectChaptersOfPart } from "../selectors";
 import ChapterBodyForm from "./ChapterBodyForm";
+
+import { api } from "../../utils/api";
 
 const ChapterListItem = (props) => {
   const { chapter, partId } = props;
@@ -33,9 +35,7 @@ const ChapterListItem = (props) => {
 
   const onConfirmDelete = async () => {
     try {
-      await axios.delete(
-        `${process.env.REACT_APP_API_URL}/chapters/${chapter._id}`
-      );
+      await api.delete(`/chapters/${chapter._id}`);
       dispatch(deleteChapter(partId, chapter._id));
     } catch (err) {
       // TODO
@@ -48,13 +48,22 @@ const ChapterListItem = (props) => {
       <ListItem>
         <ListItemText primary={chapter.title} />
         {chapter.body && (
-          <IconButton
-            size="small"
-            component={Link}
-            to={`/chapterbreath/${chapter._id}`}
-          >
-            <ReorderIcon />
-          </IconButton>
+          <>
+            <IconButton
+              size="small"
+              component={Link}
+              to={`/chapter/${chapter._id}`}
+            >
+              <BookIcon />
+            </IconButton>
+            <IconButton
+              size="small"
+              component={Link}
+              to={`/admin/chapterbreath/${chapter._id}`}
+            >
+              <ReorderIcon />
+            </IconButton>
+          </>
         )}
         <IconButton size="small" onClick={() => setBodyOpen(true)}>
           <PublishIcon />
@@ -63,7 +72,7 @@ const ChapterListItem = (props) => {
           <IconButton
             size="small"
             component={Link}
-            to={`/chapter/${chapter._id}`}
+            to={`/admin/chaptersync/${chapter._id}`}
           >
             <SyncIcon />
           </IconButton>

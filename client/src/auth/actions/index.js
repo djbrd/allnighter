@@ -11,7 +11,13 @@ import {
   SIGNING_OUT,
 } from "./types";
 
+import { loadState, saveState, clearState } from "../../utils";
+
 export const authInit = () => async (dispatch) => {
+  const user = loadState("user");
+  if (user) {
+    dispatch(registerUser(user));
+  }
   dispatch(googleAuthInit());
   dispatch(facebookAuthInit());
 };
@@ -29,20 +35,21 @@ export const signingError = (errorMessage) => {
   };
 };
 
-const registerToken = (token) => {
-  localStorage.setItem("token", token);
+const registerUser = (user) => {
+  const { token, userName, admin } = user;
+  saveState("user", user);
   return {
     type: SIGNED_IN,
-    payload: { jwtToken: token },
+    payload: { token, userName, admin },
   };
 };
 
-export const signup = (token) => registerToken(token);
+export const signup = (user) => registerUser(user);
 
-export const signin = (token) => registerToken(token);
+export const signin = (user) => registerUser(user);
 
 export const signout = () => async (dispatch, getState) => {
-  localStorage.removeItem("token");
+  clearState("user");
   dispatch({ type: SIGNING_OUT });
   const { google, facebook } = getState().auth;
   if (google) {
@@ -99,8 +106,11 @@ export const googleSignedIn =
         tokenId: id_token,
       }
     );
-    const { token } = res.data;
-    dispatch({ type: SIGNED_IN, payload: { jwtToken: token, google: true } });
+    const { token, userName, admin } = res.data;
+    dispatch({
+      type: SIGNED_IN,
+      payload: { token, userName, admin, google: true },
+    });
   };
 
 // Retrieval of token from server is handled by callback at window level
@@ -147,8 +157,11 @@ export const facebookSignedIn =
         access_token: accessToken,
       }
     );
-    const { token } = res.data;
-    dispatch({ type: SIGNED_IN, payload: { jwtToken: token, facebook: true } });
+    const { token, userName, admin } = res.data;
+    dispatch({
+      type: SIGNED_IN,
+      payload: { token, userName, admin, facebook: true },
+    });
   };
 
 export const facebookSignIn = () => async (dispatch) => {

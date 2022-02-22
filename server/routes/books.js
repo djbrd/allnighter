@@ -4,6 +4,7 @@ const Book = require("../models/Book");
 const Part = require("../models/Part");
 const { deleteAudio } = require("../services/chapter");
 const { lazilyDeleteBucket } = require("../services/s3");
+const { requireAdmin } = require("../services/auth");
 
 books.get("/", async (req, res) => {
   const books = await Book.find().populate({
@@ -11,10 +12,12 @@ books.get("/", async (req, res) => {
     select: "_id title",
     populate: { path: "chapters", select: "_id title audio body" },
   });
+
   res.status(200).send({ books });
 });
 
-books.get("/:id", async (req, res) => {
+// This path populates chapters and therefore requires admin rights
+books.get("/:id", requireAdmin, async (req, res) => {
   const book = await Book.findById(req.params.id).populate({
     path: "parts",
     populate: { path: "chapters" },
@@ -25,7 +28,19 @@ books.get("/:id", async (req, res) => {
   res.status(200).send({ book });
 });
 
-books.post("/", async (req, res) => {
+books.get("/title/:title", async (req, res) => {
+  const book = await Book.findOne({ title: req.params.title }).populate({
+    path: "parts",
+    populate: { path: "chapters", select: "_id title audio body" },
+  });
+
+  if (!book) {
+    return res.status(404).send({ message: `Cannot find ${req.params.title}` });
+  }
+  res.status(200).send({ book });
+});
+
+books.post("/", requireAdmin, async (req, res) => {
   const { title } = req.body;
   const book = new Book({ title });
   book.save((err) => {
@@ -37,7 +52,7 @@ books.post("/", async (req, res) => {
   });
 });
 
-books.delete("/:bookId", async (req, res) => {
+books.delete("/:bookId", requireAdmin, async (req, res) => {
   const bookId = req.params.bookId;
   let book = await Book.findById(bookId);
   if (!book) {
@@ -57,7 +72,7 @@ books.delete("/:bookId", async (req, res) => {
 });
 
 // TEMP
-books.delete("/", async (req, res) => {
+books.delete("/", requireAdmin, async (req, res) => {
   try {
     await Book.deleteMany();
   } catch (err) {
@@ -69,7 +84,7 @@ books.delete("/", async (req, res) => {
 });
 
 // Add a new part to a book
-books.post("/:id/parts", async (req, res) => {
+books.post("/:id/parts", requireAdmin, async (req, res) => {
   const { title } = req.body;
   let part = new Part({ title });
   await part.save();
@@ -90,7 +105,7 @@ books.post("/:id/parts", async (req, res) => {
 });
 
 // Remove part from book
-books.delete("/:bookId/parts/:partId", async (req, res) => {
+books.delete("/:bookId/parts/:partId", requireAdmin, async (req, res) => {
   const partId = req.params.partId;
   const book = await Book.findOneAndUpdate(
     {

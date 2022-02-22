@@ -1,7 +1,6 @@
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -10,6 +9,7 @@ import Chip from "@material-ui/core/Chip";
 
 import { createChapterBody } from "../actions";
 import { setErrorsFromResponse } from "../../utils";
+import { api } from "../../utils/api";
 
 const useStyles = makeStyles((theme) => ({
   selectFile: {
@@ -59,19 +59,13 @@ const ChapterBodyForm = (props) => {
     formData.append("body", data["body"][0]);
 
     try {
-      const res = await axios.patch(
-        `${process.env.REACT_APP_API_URL}/chapters/${chapterId}`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const res = await api.patch(`/chapters/${chapterId}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
-      console.log(res.data.chapter._id);
       dispatch(createChapterBody(res.data.chapter));
       onClose();
     } catch (err) {
-      console.log(err);
       setErrorsFromResponse(err.response);
     }
   };

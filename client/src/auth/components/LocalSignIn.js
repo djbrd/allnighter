@@ -53,8 +53,7 @@ export default function LocalSignIn() {
         `${process.env.REACT_APP_API_URL}/${path}`,
         data
       );
-      const { token } = res.data;
-      dispatch(inNotUp ? signin(token) : signup(token));
+      dispatch(inNotUp ? signin(res.data) : signup(res.data));
     } catch (e) {
       if (e.response.status === 422) {
         for (const fieldKey in e.response.data) {
@@ -78,7 +77,9 @@ export default function LocalSignIn() {
         <Controller
           name="email"
           control={control}
-          render={(props) => <ControlledTextField {...props} type="email" />}
+          render={(props) => (
+            <ControlledTextField {...props} type="email" autofocus />
+          )}
         />
         <Controller
           name="password"

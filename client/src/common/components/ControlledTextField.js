@@ -6,6 +6,7 @@ const ControlledTextField = (props) => {
     field,
     type,
     fieldState: { error },
+    autoFocus,
   } = props;
 
   return (
@@ -21,6 +22,7 @@ const ControlledTextField = (props) => {
       variant="outlined"
       margin="normal"
       fullWidth
+      autoFocus={autoFocus}
     />
   );
 };

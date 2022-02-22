@@ -1,7 +1,6 @@
 import { useForm, Controller } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 
 import Button from "@material-ui/core/Button";
@@ -10,6 +9,7 @@ import FormDialog from "../../common/components/FormDialog";
 import ControlledTextField from "../../common/components/ControlledTextField";
 import { createBook } from "../actions";
 import { setErrorsFromResponse } from "../../utils";
+import { api } from "../../utils/api";
 
 const schema = Yup.object().shape({
   title: Yup.string().required("Required"),
@@ -29,10 +29,7 @@ const BookForm = (props) => {
 
   const onSubmit = async (data) => {
     try {
-      const res = await axios.post(
-        `${process.env.REACT_APP_API_URL}/books`,
-        data
-      );
+      const res = await api.post(`/books`, data);
       const { book } = res.data;
       dispatch(createBook(book));
       onClose();

@@ -30,7 +30,7 @@ import {
   PLAYBACK_ENDED,
 } from "../hooks/playbackStates";
 
-const ChapterAudioControls = (props) => {
+const AudioControls = (props) => {
   const { chapterId } = useParams();
   const {
     setPlaybackTime,
@@ -166,4 +166,4 @@ const ChapterAudioControls = (props) => {
   );
 };
 
-export default ChapterAudioControls;
+export default AudioControls;

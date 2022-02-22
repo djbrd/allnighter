@@ -1,4 +1,5 @@
 export const INIT_CONTENT = "init_content";
+export const INIT_FAILURE = "init_failure";
 export const CREATE_BOOK = "create_book";
 export const CREATE_PART = "create_part";
 export const DELETE_PART = "delete_part";
@@ -13,6 +14,7 @@ export const SET_SENTENCE_START_TIME = "set_sentence_start_time";
 export const SPLIT_SENTENCE = "split_sentence";
 export const MERGE_SENTENCES = "merge_sentences";
 
+export const SET_CHAPTER = "set_chapter";
 export const START_READING = "start_reading";
 export const STOP_READING = "stop_reading";
 export const NEXT_SENTENCE = "next_sentence";

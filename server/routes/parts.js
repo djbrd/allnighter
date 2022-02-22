@@ -6,22 +6,35 @@ const Book = require("../models/Book");
 const multer = require("multer");
 
 const { deleteAudio, bodyToParagraphs } = require("../services/chapter");
+const { requireAdmin } = require("../services/auth");
 
 parts.get("/", async (req, res) => {
   const parts = await Part.find();
   res.status(200).send({ parts });
 });
 
-parts.get("/:id", async (req, res) => {
-  console.log(req.params.id);
-  const part = await Part.findById(req.params.id);
+parts.get("/:partId", async (req, res) => {
+  const part = await Part.findById(req.params.partId);
   if (!part) {
     return res.status(404).send({ message: "Cannot find part" });
   }
   res.status(200).send({ part });
 });
 
-parts.delete("/:partId", async (req, res, next) => {
+parts.patch("/:partId", requireAdmin, async (req, res, next) => {
+  const part = await Part.findById(req.params.partId);
+  if (!part) {
+    return res.status(404).send({ message: "Cannot find part" });
+  }
+  const { title } = req.body;
+  if (title) {
+    part.title = title;
+  }
+  await part.save();
+  res.status(200).send({ part });
+});
+
+parts.delete("/:partId", requireAdmin, async (req, res, next) => {
   const partId = req.params.partId;
   try {
     // Remove part from book
@@ -59,7 +72,7 @@ parts.delete("/:partId", async (req, res, next) => {
 });
 
 // TEMP
-parts.delete("/", async (req, res, next) => {
+parts.delete("/", requireAdmin, async (req, res, next) => {
   try {
     await Part.deleteMany();
   } catch (err) {
@@ -81,74 +94,85 @@ const upload = multer({
 });
 
 // Add new chapter to a part
-parts.post("/:id/chapter", upload.single("body"), async (req, res, next) => {
-  try {
-    // if (!req.file) {
-    //   return res.status(422).send({ error: "File is required" });
-    // }
+parts.post(
+  "/:id/chapter",
+  requireAdmin,
+  upload.single("body"),
+  async (req, res, next) => {
+    try {
+      // if (!req.file) {
+      //   return res.status(422).send({ error: "File is required" });
+      // }
 
-    let newChapter = {
-      title: req.body.title,
-    };
+      console.log(req.user);
 
-    if (req.file) {
-      const body = req.file.buffer.toString();
-      newChapter.body = body;
-      newChapter.paragraphs = bodyToParagraphs(body);
+      let newChapter = {
+        title: req.body.title,
+      };
+
+      if (req.file) {
+        const body = req.file.buffer.toString();
+        newChapter.body = true;
+        newChapter.paragraphs = bodyToParagraphs(body);
+      }
+      const chapter = await Chapter.create(newChapter);
+
+      // Add reference to book
+      part = await Part.findByIdAndUpdate(
+        req.params.id,
+        { $push: { chapters: chapter._id } },
+        { new: true, useFindAndModify: false }
+      );
+
+      if (!part) {
+        chapter.deleteOne();
+        return res.status(404).send({ message: "Invalid part id" });
+      }
+
+      res.status(201).send({
+        chapter,
+      });
+    } catch (err) {
+      next(err);
     }
-    const chapter = await Chapter.create(newChapter);
-
-    // Add reference to book
-    part = await Part.findByIdAndUpdate(
-      req.params.id,
-      { $push: { chapters: chapter._id } },
-      { new: true, useFindAndModify: false }
-    );
-
-    if (!part) {
-      chapter.deleteOne();
-      return res.status(404).send({ message: "Invalid part id" });
-    }
-
-    res.status(201).send({
-      chapter,
-    });
-  } catch (err) {
-    next(err);
   }
-});
+);
 
 // Remove chapter from a part
-parts.delete("/:partId/chapter/:chapterId", async (req, res, next) => {
-  const partId = req.params.partId;
-  const chapterId = req.params.chapterId;
+parts.delete(
+  "/:partId/chapter/:chapterId",
+  requireAdmin,
+  async (req, res, next) => {
+    const partId = req.params.partId;
+    const chapterId = req.params.chapterId;
 
-  try {
-    // Remove from part
-    const part = await Part.findByIdAndUpdate(
-      partId,
-      {
-        $pull: { chapters: chapterId },
-      },
-      { new: true, useFindAndModify: false }
-    );
-    if (!part) {
-      next(new Error("Part not found"));
+    try {
+      // Remove from part
+      const part = await Part.findByIdAndUpdate(
+        partId,
+        {
+          $pull: { chapters: chapterId },
+        },
+        { new: true, useFindAndModify: false }
+      );
+      if (!part) {
+        next(new Error("Part not found"));
+      }
+
+      const chapter = await Chapter.findByIdAndRemove(chapterId);
+      if (!chapter) {
+        next(new Error("Chapter not found"));
+      }
+
+      if (chapter.audio) {
+        await deleteAudio(chapter._id, part._id);
+      }
+    } catch (err) {
+      next(err);
     }
 
-    const chapter = await Chapter.findByIdAndRemove(chapterId);
-    if (!chapter) {
-      next(new Error("Chapter not found"));
-    }
-
-    if (chapter.audio) {
-      await deleteAudio(chapter._id, part._id);
-    }
-  } catch (err) {
-    next(err);
+    res.status(200).send(part);
   }
-
-  res.status(200).send(part);
-});
+);
 
 module.exports = parts;

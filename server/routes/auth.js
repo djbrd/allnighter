@@ -10,6 +10,14 @@ const tokenForUser = (user) => {
   return jwt.sign({ sub: user.id, iat: timestamp }, config.secret);
 };
 
+const userResponse = (user) => {
+  return {
+    token: tokenForUser(user),
+    userName: user.email.split("@")[0],
+    admin: user.email == process.env.ADMIN_EMAIL,
+  };
+};
+
 module.exports = (app) => {
   app.post("/signup", (req, res, next) => {
     const { email, password } = req.body;
@@ -35,13 +43,13 @@ module.exports = (app) => {
           return res.status(422).send({ error: err });
         }
 
-        res.json({ token: tokenForUser(user) });
+        res.json(userResponse(user));
       });
     });
   });
 
   app.post("/signin", requireSignin, (req, res, next) => {
-    res.json({ token: tokenForUser(req.user) });
+    res.json(userResponse(req.user));
   });
 
   app.post("/auth/google", async (req, res, next) => {
@@ -62,11 +70,10 @@ module.exports = (app) => {
       upsert: true,
     });
 
-    console.log("Added user: ", user);
-    res.json({ token: tokenForUser(user) });
+    res.json(userResponse(user));
   });
 
   app.post("/auth/facebook", requireFacebook, async (req, res, next) => {
-    res.json({ token: tokenForUser(req.user) });
+    res.json(userResponse(req.user));
   });
 };

@@ -1,16 +1,15 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import Button from "@material-ui/core/Button";
-import Avatar from "@material-ui/core/Avatar";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
+import { IconButton, Avatar, Menu, MenuItem } from "@material-ui/core";
 
 import { signout } from "../actions";
+import { selectUserName } from "../selectors";
 
 const SignedInButton = () => {
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
+  const userName = useSelector(selectUserName);
 
   const handleButtonClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -27,9 +26,9 @@ const SignedInButton = () => {
 
   return (
     <>
-      <Button onClick={handleButtonClick} size="small">
-        <Avatar>D</Avatar>
-      </Button>
+      <IconButton onClick={handleButtonClick} size="small">
+        <Avatar>{userName.charAt(0).toUpperCase()}</Avatar>
+      </IconButton>
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}

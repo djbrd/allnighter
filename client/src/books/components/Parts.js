@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
 
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
@@ -16,9 +15,11 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 
 import PartForm from "./PartForm.js";
 import Chapters from "./Chapters.js";
+import FormDialog from "../../common/components/FormDialog";
 import ConfirmDialog from "../../common/components/ConfirmDialog";
 import { deletePart } from "../actions";
 import { selectPartsOfBook } from "../selectors";
+import { api } from "../../utils/api";
 
 const PartListItem = (props) => {
   const { part, bookId } = props;
@@ -30,7 +31,7 @@ const PartListItem = (props) => {
   const onConfirmDelete = async () => {
     try {
       setDeleting(true);
-      await axios.delete(`${process.env.REACT_APP_API_URL}/parts/${part._id}`);
+      await api.delete(`/parts/${part._id}`);
       dispatch(deletePart(bookId, part._id));
     } catch (err) {
       // TODO
@@ -94,11 +95,13 @@ const Parts = (props) => {
           </ListItemAvatar>
         </ListItem>
       </List>
-      <PartForm
-        bookId={book._id}
-        open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-      />
+      <FormDialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+        <PartForm
+          bookId={book._id}
+          open={dialogOpen}
+          onClose={() => setDialogOpen(false)}
+        />
+      </FormDialog>
     </>
   );
 };

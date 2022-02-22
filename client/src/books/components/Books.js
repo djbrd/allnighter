@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 
 import {
   Container,
-  CircularProgress,
   List,
   ListItem,
   ListItemText,
@@ -12,12 +11,11 @@ import {
   IconButton,
 } from "@material-ui/core";
 
-import AddCircleIcon from "@material-ui/icons/AddCircle";
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
+import { AddCircle, ExpandLess, ExpandMore } from "@material-ui/icons";
 
 import BookForm from "./BookForm.js";
 import Parts from "./Parts.js";
+import Loading from "../../common/components/Loading";
 import { selectBooks, selectIsContentInitialised } from "../selectors";
 
 const BookListItem = (props) => {
@@ -45,7 +43,7 @@ const Books = () => {
   return (
     <Container maxWidth="sm">
       {!isContentInitialised ? (
-        <CircularProgress />
+        <Loading />
       ) : (
         <>
           <List dense component="div">
@@ -55,7 +53,7 @@ const Books = () => {
             <ListItem>
               <ListItemAvatar>
                 <IconButton onClick={() => setDialogOpen(true)}>
-                  <AddCircleIcon />
+                  <AddCircle />
                 </IconButton>
               </ListItemAvatar>
             </ListItem>

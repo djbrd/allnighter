@@ -1,20 +1,19 @@
 const mongoose = require("mongoose");
 const Part = require("./Part");
 
-const bookSchema = new mongoose.Schema(
-  {
-    title: {
-      type: String,
-      required: true,
+const bookSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  parts: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Part",
     },
-    parts: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Part",
-      },
-    ],
-  }
-);
+  ],
+});
 
 // Create a part for a new book
 bookSchema.pre("save", async function (next) {

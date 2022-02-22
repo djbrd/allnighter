@@ -2,10 +2,10 @@ const express = require("express");
 const chapters = express.Router();
 const Chapter = require("../models/Chapter");
 const Part = require("../models/Part");
-const process = require("process");
 
 const multer = require("multer");
 const multerS3 = require("multer-s3");
+const { requireAdmin } = require("../services/auth");
 const {
   getAudioObjectKey,
   getBucketId,
@@ -43,37 +43,44 @@ const upload = multer({
   limits: { fileSize: 20 * 1024 * 1024, fieldNameSize: 127 },
 });
 
-chapters.patch("/:chapterId", upload.single("body"), async (req, res, next) => {
-  try {
-    const chapter = await Chapter.findById(req.params.chapterId);
-    if (chapter === null) {
-      return res.status(404).send({ message: "Cannot find chapter" });
-    }
+chapters.patch(
+  "/:chapterId",
+  requireAdmin,
+  upload.single("body"),
+  async (req, res, next) => {
+    try {
+      const chapter = await Chapter.findById(req.params.chapterId);
+      if (chapter === null) {
+        return res.status(404).send({ message: "Cannot find chapter" });
+      }
 
-    const { title, paragraphs, sentenceStartTimes } = req.body;
-    if (title) {
-      chapter.title = title;
-    }
-    if (req.file) {
-      const body = req.file.buffer.toString();
-      chapter.body = body;
-      chapter.paragraphs = bodyToParagraphs(body);
-    } else if (paragraphs) {
-      chapter.paragraphs = paragraphs;
-    }
-    if (sentenceStartTimes) {
-      chapter.sentenceStartTimes = sentenceStartTimes;
-    }
+      console.log(req.body);
+      const { title, paragraphs, sentenceStartTimes } = req.body;
+      if (title) {
+        chapter.title = title;
+      }
+      if (req.file) {
+        const body = req.file.buffer.toString();
+        chapter.paragraphs = bodyToParagraphs(body);
+      } else if (paragraphs) {
+        chapter.paragraphs = paragraphs;
+      }
+      if (sentenceStartTimes) {
+        chapter.sentenceStartTimes = sentenceStartTimes;
+      }
 
-    await chapter.save();
-    res.status(200).send({ chapter });
-  } catch (err) {
-    next(err);
+      await chapter.save();
+      res.status(200).send({ chapter });
+    } catch (err) {
+      console.log(err);
+      next(err);
+    }
   }
-});
+);
 
-chapters.delete("/:chapterId", async (req, res, next) => {
+chapters.delete("/:chapterId", requireAdmin, async (req, res, next) => {
   const chapterId = req.params.chapterId;
+  console.log("googldrlkjrlhjfrt");
   try {
     // Remove from part
     const part = await Part.findOneAndUpdate(
@@ -106,7 +113,7 @@ chapters.delete("/:chapterId", async (req, res, next) => {
 });
 
 // TEMP
-chapters.delete("/", async (req, res) => {
+chapters.delete("/", requireAdmin, async (req, res) => {
   try {
     await Chapter.deleteMany();
   } catch (err) {
@@ -139,6 +146,7 @@ const uploadToS3 = multer({
 
 chapters.post(
   "/:chapterId/audio",
+  requireAdmin,
   // Before upload
   async (req, res, next) => {
     try {
@@ -179,7 +187,7 @@ chapters.post(
   }
 );
 
-chapters.get("/:chapterId/audio", async (req, res) => {
+chapters.get("/:chapterId/audio", async (req, res, next) => {
   const chapterId = req.params.chapterId;
   try {
     const bucketId = await getBucketId(chapterId);
@@ -191,7 +199,6 @@ chapters.get("/:chapterId/audio", async (req, res) => {
     const headData = await s3.headObject(params).promise();
     const range = req.headers.range;
     if (range) {
-      console.log("Range: ", range);
       const parts = range.replace(/bytes=/, "").split("-");
       const start = parseInt(parts[0], 10);
       const end = parts[1]
@@ -224,7 +231,7 @@ chapters.get("/:chapterId/audio", async (req, res) => {
 });
 
 // Delete a chapter's audio
-chapters.delete("/:chapterId/audio", async (req, res, next) => {
+chapters.delete("/:chapterId/audio", requireAdmin, async (req, res, next) => {
   try {
     let chapter = await Chapter.findById(req.params.chapterId);
     if (!chapter) {

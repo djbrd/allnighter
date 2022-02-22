@@ -1,10 +1,10 @@
 import {
-  INIT_CHAPTER_BODY,
   START_READING,
   STOP_READING,
   NEXT_SENTENCE,
   PREVIOUS_SENTENCE,
   SET_SENTENCE,
+  SET_CHAPTER,
 } from "../actions/types";
 
 const INITIAL_STATE = {
@@ -14,12 +14,14 @@ const INITIAL_STATE = {
 
 const reading = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case INIT_CHAPTER_BODY:
-      const {chapter} = action.payload;
+    case SET_CHAPTER:
+      const { chapterId } = action.payload;
+      const sentenceIdx =
+        state.chapterId === chapterId ? state.sentenceIdx : -1;
       return {
         ...state,
-        chapterId: chapter._id,
-        sentenceIdx: -1,
+        chapterId,
+        sentenceIdx,
       };
     case START_READING:
       return {
@@ -35,22 +37,22 @@ const reading = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         sentenceIdx: state.sentenceIdx + 1,
-      }
+      };
     case PREVIOUS_SENTENCE: {
       return {
         ...state,
         sentenceIdx: state.sentenceIdx - 1,
-      }
+      };
     }
     case SET_SENTENCE: {
       return {
         ...state,
         sentenceIdx: action.payload,
-      }
+      };
     }
     default:
       return state;
   }
-}
+};
 
 export default reading;

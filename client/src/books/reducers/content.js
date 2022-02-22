@@ -4,6 +4,7 @@ import produce from "immer";
 import { bookSchema } from "./schema";
 import {
   INIT_CONTENT,
+  INIT_FAILURE,
   CREATE_BOOK,
   CREATE_PART,
   DELETE_PART,
@@ -24,6 +25,7 @@ const INITIAL_STATE = {
   books: [],
   parts: [],
   chapters: [],
+  errorMessage: "",
 };
 
 const content = produce((draft, action = {}) => {
@@ -35,6 +37,9 @@ const content = produce((draft, action = {}) => {
       draft.books = books;
       draft.chapters = chapters;
       draft.parts = parts;
+      break;
+    case INIT_FAILURE:
+      draft.errorMessage = "Failed to intialise content";
       break;
     case CREATE_BOOK:
       const book = action.payload;
@@ -69,8 +74,6 @@ const content = produce((draft, action = {}) => {
     }
     case CREATE_CHAPTER_BODY: {
       const { chapter } = action.payload;
-      console.log(draft.chapters);
-      console.log(chapter._id);
       draft.chapters[chapter._id] = chapter;
       break;
     }

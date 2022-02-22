@@ -25,3 +25,32 @@ export const setErrorsFromResponse = (response, setError) => {
     console.log("500: ", response);
   }
 };
+
+export const loadState = (key) => {
+  try {
+    const serializedState = localStorage.getItem(key);
+    if (serializedState === null) {
+      return undefined;
+    }
+    return JSON.parse(serializedState);
+  } catch (err) {
+    return undefined;
+  }
+};
+
+export const saveState = (key, state) => {
+  try {
+    const serializedState = JSON.stringify(state);
+    localStorage.setItem(key, serializedState);
+  } catch (err) {
+    // do nothing
+  }
+};
+
+export const clearState = (key) => {
+  try {
+    localStorage.removeItem(key);
+  } catch (err) {
+    // do nothing
+  }
+};

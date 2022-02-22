@@ -6,8 +6,8 @@ const chapterSchema = new mongoose.Schema({
     required: true,
   },
   body: {
-    type: String,
-    default: "",
+    type: Boolean,
+    default: false,
   },
   paragraphs: {
     type: [[String]],
@@ -21,6 +21,12 @@ const chapterSchema = new mongoose.Schema({
     type: [Number],
     default: [],
   },
+});
+
+chapterSchema.pre("save", function (next) {
+  const chapter = this;
+  chapter.body = !!chapter.paragraphs && chapter.paragraphs.length > 0;
+  next();
 });
 
 const Chapter = mongoose.model("Chapter", chapterSchema);

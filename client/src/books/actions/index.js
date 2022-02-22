@@ -2,6 +2,7 @@ import axios from "axios";
 
 import {
   INIT_CONTENT,
+  INIT_FAILURE,
   CREATE_BOOK,
   CREATE_PART,
   DELETE_PART,
@@ -20,11 +21,22 @@ import {
   NEXT_SENTENCE,
   PREVIOUS_SENTENCE,
   SET_SENTENCE,
+  SET_CHAPTER,
 } from "./types";
 
 export const contentInit = () => async (dispatch) => {
-  const res = await axios.get(`${process.env.REACT_APP_API_URL}/books`);
-  dispatch({ type: INIT_CONTENT, payload: res.data.books });
+  try {
+    const res = await axios.get(
+      `${process.env.REACT_APP_API_URL}/books/title/all-nighter`
+    );
+    dispatch({ type: INIT_CONTENT, payload: [res.data.book] });
+  } catch (err) {
+    dispatch(initFailure());
+  }
+};
+
+export const initFailure = () => {
+  return { type: INIT_FAILURE };
 };
 
 export const createBook = (book) => {
@@ -83,13 +95,15 @@ export const deleteChapterAudio = (chapterId) => {
   };
 };
 
-export const fetchChapterBody = (chapterId) => async (dispatch) => {
-  const res = await axios(
-    `${process.env.REACT_APP_API_URL}/chapters/${chapterId}`
-  );
+export const initChapterBody = (chapter) => {
+  return { type: INIT_CHAPTER_BODY, payload: { chapter } };
+};
 
-  let { chapter } = res.data;
-  dispatch({ type: INIT_CHAPTER_BODY, payload: { chapter } });
+export const setChapter = (chapterId) => {
+  return {
+    type: SET_CHAPTER,
+    payload: { chapterId },
+  };
 };
 
 export const clearSentenceStartTimes = (chapterId) => {

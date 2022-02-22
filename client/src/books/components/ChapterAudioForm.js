@@ -1,7 +1,6 @@
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -11,6 +10,7 @@ import Chip from "@material-ui/core/Chip";
 import FormDialog from "../../common/components/FormDialog";
 import { createChapterAudio } from "../actions";
 import { setErrorsFromResponse } from "../../utils";
+import { api } from "../../utils/api";
 
 const useStyles = makeStyles((theme) => ({
   selectFile: {
@@ -62,13 +62,9 @@ const ChapterAudioForm = (props) => {
     formData.append("audio", data["audio"][0]);
 
     try {
-      await axios.post(
-        `${process.env.REACT_APP_API_URL}/chapters/${chapterId}/audio`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      await api.post(`/chapters/${chapterId}/audio`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       dispatch(createChapterAudio(chapterId));
       onClose();

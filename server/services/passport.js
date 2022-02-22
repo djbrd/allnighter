@@ -63,6 +63,7 @@ const facebookStrategy = new FacebookTokenStrategy(
   async (accessToken, refreshToken, profile, done) => {
     const filter = { facebookId: profile.id };
     const update = { email: profile._json.email };
+    console.log(profile);
 
     let user = await User.findOneAndUpdate(filter, update, {
       new: true,

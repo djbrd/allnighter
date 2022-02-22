@@ -9,7 +9,9 @@ import {
 
 const INITIAL_STATE = {
   initialising: [],
-  jwtToken: null,
+  token: null,
+  userName: null,
+  admin: null,
   errorMessage: "",
   google: null,
   facebook: null,
@@ -53,13 +55,13 @@ const auth = (state = INITIAL_STATE, action) => {
       // Signed out after being signed in - clear jwt token
       if (!action.payload || state[action.payload]) {
         nextState.errorMessage = "";
-        nextState.jwtToken = false;
+        nextState.token = false;
       }
 
-      // Initialise jwtToken if all auth providers have been checked
-      // Only necessary if null value of jwtToken is being used to indicate initialisation
+      // Initialise token if all auth providers have been checked
+      // Only necessary if null value of token is being used to indicate initialisation
       // else if (nextState.google === false && nextState.facebook === false) {
-      //   nextState.jwtToken = false;
+      //   nextState.token = false;
       // }
 
       return nextState;

@@ -18,16 +18,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Sentence = (props) => {
-  const { active, addSpace, text, sentenceId, startTime, setPlaybackTime } =
-    props;
+  const {
+    // active,
+    addSpace,
+    text,
+    sentenceId,
+    startTime,
+    setPlaybackTime,
+  } = props;
   const sentenceRef = useRef(null);
   const classes = useStyles();
 
+  const activeSentenceIdx = useSelector(selectReadingSentenceIdx);
   const dispatch = useDispatch();
 
   // Scroll the sentence to be visible when it's active
   useEffect(() => {
-    if (active) {
+    if (activeSentenceIdx === sentenceId) {
       let offset = window.visualViewport.height * 0.3;
       if (offset < 100) offset = 100;
       window.scrollTo({
@@ -35,7 +42,7 @@ const Sentence = (props) => {
         behavior: "smooth",
       });
     }
-  }, [active]);
+  }, [activeSentenceIdx, sentenceId]);
 
   // Make sentence active when it's clicked
   const onClick = () => {
@@ -49,7 +56,9 @@ const Sentence = (props) => {
     <>
       <span
         ref={sentenceRef}
-        className={active ? classes.activeSentence : ""}
+        className={
+          activeSentenceIdx === sentenceId ? classes.activeSentence : ""
+        }
         onClick={onClick}
       >
         {text}
@@ -64,7 +73,6 @@ const ChapterBodyScroll = ({ setPlaybackTime }) => {
   const paragraphs = useSelector((state) =>
     selectChapterParagraphs(state, chapterId)
   );
-  const activeSentenceIdx = useSelector(selectReadingSentenceIdx);
   const sentenceStartTimes = useSelector((state) =>
     selectSentenceStartTimes(state, chapterId)
   );
@@ -86,7 +94,6 @@ const ChapterBodyScroll = ({ setPlaybackTime }) => {
                   }
                   key={"sentence_" + sentenceCount++}
                   text={sentence}
-                  active={activeSentenceIdx === sentenceCount}
                   sentenceId={sentenceCount}
                   addSpace={index !== sentences.length - 1}
                   setPlaybackTime={setPlaybackTime}

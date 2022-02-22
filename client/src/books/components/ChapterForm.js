@@ -1,7 +1,6 @@
 import { useForm, Controller } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -10,6 +9,7 @@ import Button from "@material-ui/core/Button";
 import ControlledTextField from "../../common/components/ControlledTextField";
 import { createChapter } from "../actions";
 import { setErrorsFromResponse } from "../../utils";
+import { api } from "../../utils/api";
 
 const useStyles = makeStyles((theme) => ({
   selectFile: {
@@ -42,10 +42,7 @@ const ChapterForm = (props) => {
 
   const onSubmit = async (data) => {
     try {
-      const res = await axios.post(
-        `${process.env.REACT_APP_API_URL}/parts/${partId}/chapter`,
-        data
-      );
+      const res = await api.post(`/parts/${partId}/chapter`, data);
       const { chapter } = res.data;
       dispatch(createChapter(partId, chapter));
       onClose();
@@ -59,7 +56,7 @@ const ChapterForm = (props) => {
       <Controller
         name="title"
         control={control}
-        render={(props) => <ControlledTextField {...props} />}
+        render={(props) => <ControlledTextField {...props} autoFocus />}
       />
       <Button
         type="submit"

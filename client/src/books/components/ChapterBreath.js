@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 
 import { Typography } from "@material-ui/core";
 
@@ -9,6 +8,7 @@ import ChapterLayout from "./ChapterLayout";
 
 import { splitSentence, mergeSentences } from "../actions";
 import { selectChapterParagraphs } from "../selectors";
+import { api } from "../../utils/api";
 
 // Background colors for sentences
 const backgroundColors = [
@@ -80,10 +80,7 @@ const ChapterBreath = () => {
     }
     const persistParagraphs = async () => {
       try {
-        await axios.patch(
-          `${process.env.REACT_APP_API_URL}/chapters/${chapterId}`,
-          { paragraphs }
-        );
+        await api.patch(`/chapters/${chapterId}`, { paragraphs });
       } catch (err) {
         // TODO
         console.log(err);

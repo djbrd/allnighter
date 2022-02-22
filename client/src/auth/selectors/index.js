@@ -1,4 +1,8 @@
-export const selectIsSignedIn = (state) => !!state.auth.jwtToken;
+export const selectIsSignedIn = (state) => !!state.auth.token;
+
+export const selectIsAdmin = (state) => !!state.auth.admin;
+
+export const selectUserName = (state) => state.auth.userName;
 
 export const selectIsAuthorising = (state) => state.auth.isAuthorising;
 
