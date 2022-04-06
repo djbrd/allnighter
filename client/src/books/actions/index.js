@@ -27,7 +27,7 @@ import {
 export const contentInit = () => async (dispatch) => {
   try {
     const res = await axios.get(
-      `${process.env.REACT_APP_API_URL}/books/title/all-nighter`
+      `${process.env.REACT_APP_API_URL}/books/title/${process.env.REACT_APP_FEATURED_BOOK_TITLE}`
     );
     dispatch({ type: INIT_CONTENT, payload: [res.data.book] });
   } catch (err) {

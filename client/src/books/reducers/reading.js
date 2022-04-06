@@ -7,6 +7,8 @@ import {
   SET_CHAPTER,
 } from "../actions/types";
 
+import { SIGNED_OUT } from "../../auth/actions/types";
+
 const INITIAL_STATE = {
   chapterId: -1,
   sentenceIdx: -1,
@@ -14,6 +16,9 @@ const INITIAL_STATE = {
 
 const reading = (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case SIGNED_OUT: {
+      return INITIAL_STATE;
+    }
     case SET_CHAPTER:
       const { chapterId } = action.payload;
       const sentenceIdx =

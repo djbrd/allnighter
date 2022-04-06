@@ -18,15 +18,13 @@ export const selectChapter = (state, chapterId) => {
 };
 
 export const selectChapterTitle = (state, chapterId) => {
-  return state.content.chapters[chapterId]
-    ? state.content.chapters[chapterId].title
-    : null;
+  const { chapters } = state.content;
+  return chapters[chapterId] ? chapters[chapterId].title : null;
 };
 
 export const selectChapterParagraphs = (state, chapterId) => {
-  return state.content.chapters[chapterId]
-    ? state.content.chapters[chapterId].paragraphs ?? null
-    : null;
+  const { chapters } = state.content;
+  return chapters[chapterId] ? chapters[chapterId].paragraphs ?? null : null;
 };
 
 export const selectIsContentInitialised = (state) => {
@@ -43,8 +41,7 @@ export const selectSentenceStartTimes = (state, chapterId) => {
 
 export const selectReadingPartId = (state) => {
   const chapterId = state.reading.chapterId;
-  console.log(chapterId);
-  const book = selectAllnighter(state);
+  const book = selectFeaturedBook(state);
   const { parts } = state.content;
   if (!book) {
     return null;
@@ -66,34 +63,30 @@ export const selectReadingSentenceIdx = (state) => {
   return state.reading.sentenceIdx;
 };
 
-export const selectAllnighterId = (state) => {
+export const selectFeaturedBookId = (state) => {
   const { books } = state.content;
   if (!books) {
     return null;
   }
 
   for (const [bookId, book] of Object.entries(books)) {
-    if (book.title === "all-nighter") {
+    if (book.title === process.env.REACT_APP_FEATURED_BOOK_TITLE) {
       return bookId;
     }
   }
   return null;
 };
 
-export const selectAllnighter = (state) => {
-  const bookId = selectAllnighterId(state);
+export const selectFeaturedBook = (state) => {
+  const bookId = selectFeaturedBookId(state);
   return bookId ? state.content.books[bookId] : null;
 };
 
 export const selectChapterId = (state, partIdx, chapterIdx) => {
-  const { books } = state.content;
-  if (!books) {
-    return null;
-  }
-
-  const bookArr = Object.keys(books).map((key) => books[key]);
-  const allNighter = bookArr[0];
-  const partId = allNighter.parts[partIdx];
-  const chapterId = state.content.parts[partId].chapters[chapterIdx];
+  const featuredBook = selectFeaturedBook(state);
+  const partId = featuredBook ? featuredBook.parts[partIdx] : null;
+  const chapterId = partId
+    ? state.content.parts[partId].chapters[chapterIdx]
+    : null;
   return chapterId;
 };

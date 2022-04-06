@@ -78,13 +78,15 @@ export default function LocalSignIn() {
           name="email"
           control={control}
           render={(props) => (
-            <ControlledTextField {...props} type="email" autofocus />
+            <ControlledTextField {...props} type="email" autofocus required />
           )}
         />
         <Controller
           name="password"
           control={control}
-          render={(props) => <ControlledTextField {...props} type="password" />}
+          render={(props) => (
+            <ControlledTextField {...props} type="password" required />
+          )}
         />
         <Button
           type="submit"

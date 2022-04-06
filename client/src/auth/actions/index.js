@@ -58,7 +58,7 @@ export const signout = () => async (dispatch, getState) => {
     await new Promise(window.FB.logout);
     dispatch({ type: SIGNED_OUT, payload: "facebook" });
   } else {
-    await new Promise((r) => setTimeout(r, 5000));
+    await new Promise((r) => setTimeout(r, 1000));
     dispatch({ type: SIGNED_OUT });
   }
 };

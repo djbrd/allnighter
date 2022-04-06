@@ -10,15 +10,14 @@ const AuthDialog = (props) => {
   const { open, onClose } = props;
   const isAuthorising = useSelector(selectIsAuthorising);
 
+  const onDialogClose = (event, reason) => {
+    if (!isAuthorising) {
+      onClose();
+    }
+  };
+
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      disableBackdropClick={isAuthorising}
-      disableEscapeKeyDown={isAuthorising}
-      fullWidth
-      maxWidth="xs"
-    >
+    <Dialog open={open} onClose={onDialogClose} fullWidth maxWidth="xs">
       <AuthForm />
     </Dialog>
   );

@@ -71,6 +71,7 @@ const useAudio = (src) => {
       // events.forEach((event) => {
       //   audio.removeEventListener(event, consoleLogEvent);
       // });
+      audio.pause();
     };
   }, []);
 

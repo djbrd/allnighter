@@ -1,21 +1,22 @@
 import { useParams } from "react-router-dom";
-// import { useSelector } from "react-redux";
-import Drawer from "@material-ui/core/Drawer";
+import { useSelector } from "react-redux";
 
 import ChapterLayout from "./ChapterLayout";
 import ChapterBodyScroll from "./ChapterBodyScroll";
 import AudioControls from "./AudioControls";
+// import AudioButton from "./AudioButton";
+import Footer from "../../components/Footer";
 
 import useAudio from "../hooks/useAudio";
-//import { selectChapterId } from "../selectors";
+import { PLAYBACK_PLAYING } from "../hooks/playbackStates";
+
+import { selectChapterId } from "../selectors";
 
 const Audio = () => {
-  // const { partIdx, chapterIdx } = useParams();
-  // const chapterId = useSelector((state) =>
-  //   selectChapterId(state, partIdx, chapterIdx)
-  // );
-
-  const { chapterId } = useParams();
+  const { partIdx, chapterIdx } = useParams();
+  const chapterId = useSelector((state) =>
+    selectChapterId(state, partIdx, chapterIdx)
+  );
 
   const {
     setPlaybackTime,
@@ -31,7 +32,13 @@ const Audio = () => {
         setPlaybackTime={setPlaybackTime}
         getPlaybackTime={getPlaybackTime}
       />
-      <Drawer variant="persistent" anchor="bottom" open={true}>
+      {/* <AudioButton
+        startPlayback={startPlayback}
+        pausePlayback={pausePlayback}
+        getPlaybackTime={getPlaybackTime}
+        playbackState={playbackState}
+      /> */}
+      <Footer stayPut={playbackState === PLAYBACK_PLAYING}>
         <AudioControls
           startPlayback={startPlayback}
           pausePlayback={pausePlayback}
@@ -39,7 +46,7 @@ const Audio = () => {
           getPlaybackTime={getPlaybackTime}
           playbackState={playbackState}
         />
-      </Drawer>
+      </Footer>
     </>
   );
 };

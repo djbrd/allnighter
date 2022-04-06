@@ -5,11 +5,11 @@ import { useDispatch } from "react-redux";
 
 import Button from "@material-ui/core/Button";
 
-import FormDialog from "../../common/components/FormDialog";
-import ControlledTextField from "../../common/components/ControlledTextField";
-import { createBook } from "../actions";
-import { setErrorsFromResponse } from "../../utils";
-import { api } from "../../utils/api";
+import FormDialog from "../../../common/components/FormDialog";
+import ControlledTextField from "../../../common/components/ControlledTextField";
+import { createBook } from "../../actions";
+import { setErrorsFromResponse } from "../../../utils";
+import { api } from "../../../utils/api";
 
 const schema = Yup.object().shape({
   title: Yup.string().required("Required"),
@@ -44,7 +44,7 @@ const BookForm = (props) => {
         <Controller
           name="title"
           control={control}
-          render={(props) => <ControlledTextField {...props} />}
+          render={(props) => <ControlledTextField {...props} required />}
         />
         <Button
           type="submit"

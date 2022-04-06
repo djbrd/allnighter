@@ -6,10 +6,10 @@ import { useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 
-import ControlledTextField from "../../common/components/ControlledTextField";
-import { createChapter } from "../actions";
-import { setErrorsFromResponse } from "../../utils";
-import { api } from "../../utils/api";
+import ControlledTextField from "../../../common/components/ControlledTextField";
+import { createChapter } from "../../actions";
+import { setErrorsFromResponse } from "../../../utils";
+import { api } from "../../../utils/api";
 
 const useStyles = makeStyles((theme) => ({
   selectFile: {
@@ -56,7 +56,9 @@ const ChapterForm = (props) => {
       <Controller
         name="title"
         control={control}
-        render={(props) => <ControlledTextField {...props} autoFocus />}
+        render={(props) => (
+          <ControlledTextField {...props} autoFocus required />
+        )}
       />
       <Button
         type="submit"

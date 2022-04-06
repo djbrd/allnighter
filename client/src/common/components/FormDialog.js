@@ -15,18 +15,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const FormDialog = (props) => {
-  const { children, open, onClose } = props;
+  const { children, open, onClose, disableClose } = props;
   const classes = useStyles();
 
+  const onDialogClose = () => {
+    if (!disableClose) {
+      onClose();
+    }
+  };
+
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      // disableBackdropClick={disableClose}
-      // disableEscapeKeyDown={disableClose}
-      fullWidth
-      maxWidth="xs"
-    >
+    <Dialog open={open} onClose={onDialogClose} fullWidth maxWidth="xs">
       <Container className={classes.container}>{children}</Container>
     </Dialog>
   );

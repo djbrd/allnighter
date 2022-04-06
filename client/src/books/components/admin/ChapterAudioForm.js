@@ -7,10 +7,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Chip from "@material-ui/core/Chip";
 
-import FormDialog from "../../common/components/FormDialog";
-import { createChapterAudio } from "../actions";
-import { setErrorsFromResponse } from "../../utils";
-import { api } from "../../utils/api";
+import FormDialog from "../../../common/components/FormDialog";
+import { createChapterAudio } from "../../actions";
+import { setErrorsFromResponse } from "../../../utils";
+import { api } from "../../../utils/api";
 
 const useStyles = makeStyles((theme) => ({
   selectFile: {

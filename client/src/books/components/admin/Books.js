@@ -15,8 +15,8 @@ import { AddCircle, ExpandLess, ExpandMore } from "@material-ui/icons";
 
 import BookForm from "./BookForm.js";
 import Parts from "./Parts.js";
-import Loading from "../../common/components/Loading";
-import { selectBooks, selectIsContentInitialised } from "../selectors";
+import Loading from "../../../common/components/Loading";
+import { selectBooks, selectIsContentInitialised } from "../../selectors";
 
 const BookListItem = (props) => {
   const { book } = props;

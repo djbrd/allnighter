@@ -7,22 +7,25 @@ const ControlledTextField = (props) => {
     type,
     fieldState: { error },
     autoFocus,
+    multiline,
+    required,
+    inline,
   } = props;
 
   return (
     <TextField
       {...field}
-      label={
-        label ? label : field.name.charAt(0).toUpperCase() + field.name.slice(1)
-      }
+      label={label ? label : field.name}
       error={!!error}
       helperText={error ? error.message : null}
       type={!!type ? type : "text"}
-      required
+      required={required}
       variant="outlined"
       margin="normal"
-      fullWidth
+      fullWidth={!inline}
       autoFocus={autoFocus}
+      multiline={multiline}
+      rows={multiline ? 6 : 1}
     />
   );
 };

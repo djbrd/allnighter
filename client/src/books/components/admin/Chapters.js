@@ -16,18 +16,18 @@ import ReorderIcon from "@material-ui/icons/Reorder";
 import PublishIcon from "@material-ui/icons/Publish";
 import BookIcon from "@material-ui/icons/Book";
 
-import FormDialog from "../../common/components/FormDialog";
-import ConfirmDialog from "../../common/components/ConfirmDialog";
+import FormDialog from "../../../common/components/FormDialog";
+import ConfirmDialog from "../../../common/components/ConfirmDialog";
 import ChapterForm from "./ChapterForm.js";
 import ChapterAudioForm from "./ChapterAudioForm.js";
-import { deleteChapter } from "../actions";
-import { selectChaptersOfPart } from "../selectors";
 import ChapterBodyForm from "./ChapterBodyForm";
+import { deleteChapter } from "../../actions";
+import { selectChaptersOfPart } from "../../selectors";
 
-import { api } from "../../utils/api";
+import { api } from "../../../utils/api";
 
 const ChapterListItem = (props) => {
-  const { chapter, partId } = props;
+  const { chapter, partId, partIdx, index } = props;
   const [bodyOpen, setBodyOpen] = useState(false);
   const [audioOpen, setAudioOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -52,14 +52,14 @@ const ChapterListItem = (props) => {
             <IconButton
               size="small"
               component={Link}
-              to={`/chapter/${chapter._id}`}
+              to={`/${partIdx}/${index}`}
             >
               <BookIcon />
             </IconButton>
             <IconButton
               size="small"
               component={Link}
-              to={`/admin/chapterbreath/${chapter._id}`}
+              to={`/admin/chapterbreath/${partIdx}/${index}`}
             >
               <ReorderIcon />
             </IconButton>
@@ -72,7 +72,7 @@ const ChapterListItem = (props) => {
           <IconButton
             size="small"
             component={Link}
-            to={`/admin/chaptersync/${chapter._id}`}
+            to={`/admin/chaptersync/${partIdx}/${index}`}
           >
             <SyncIcon />
           </IconButton>
@@ -117,7 +117,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Chapters = (props) => {
-  const { part } = props;
+  const { part, partIdx } = props;
   const chapters = useSelector((state) => selectChaptersOfPart(state, part));
   const [dialogOpen, setDialogOpen] = useState(false);
   const classes = useStyles();
@@ -126,10 +126,12 @@ const Chapters = (props) => {
     <>
       <List dense component="div" className={classes.doubleNested}>
         <div className={classes.insideList}>
-          {chapters.map((chapter) => (
+          {chapters.map((chapter, index) => (
             <ChapterListItem
               chapter={chapter}
               partId={part._id}
+              partIdx={partIdx}
+              index={index}
               key={chapter._id}
             />
           ))}

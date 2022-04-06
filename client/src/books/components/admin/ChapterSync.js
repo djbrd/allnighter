@@ -1,14 +1,20 @@
 import { useParams } from "react-router-dom";
 import Drawer from "@material-ui/core/Drawer";
+import { useSelector } from "react-redux";
 
-import ChapterLayout from "./ChapterLayout";
-import ChapterBodyScroll from "./ChapterBodyScroll";
+import ChapterLayout from "../ChapterLayout";
+import ChapterBodyScroll from "../ChapterBodyScroll";
 import SyncControls from "./SyncControls";
 
-import useAudio from "../hooks/useAudio";
+import useAudio from "../../hooks/useAudio";
+
+import { selectChapterId } from "../../selectors";
 
 const Sync = () => {
-  const { chapterId } = useParams();
+  const { partIdx, chapterIdx } = useParams();
+  const chapterId = useSelector((state) =>
+    selectChapterId(state, partIdx, chapterIdx)
+  );
   const {
     setPlaybackTime,
     getPlaybackTime,

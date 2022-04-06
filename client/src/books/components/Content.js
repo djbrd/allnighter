@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
-  Container,
   Collapse,
   makeStyles,
   Button,
@@ -12,6 +11,9 @@ import {
 
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+
 import {
   usePopupState,
   bindHover,
@@ -19,8 +21,10 @@ import {
 } from "material-ui-popup-state/hooks";
 import HoverPopover from "material-ui-popup-state/HoverPopover";
 
+import Page from "../../common/components/Page";
+
 import {
-  selectAllnighter,
+  selectFeaturedBook,
   selectPartsOfBook,
   selectChaptersOfPart,
   selectReadingPartId,
@@ -60,13 +64,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const FullChapter = (props) => {
-  const { chapter } = props;
+  const { chapter, partIdx, index } = props;
   const classes = useStyles();
   return (
     <Button
       className={classes.chapterTitle}
       component={Link}
-      to={`/chapter/${chapter._id}`}
+      to={`/${partIdx}/${index}`}
     >
       <Typography variant="h3">{chapter.title}</Typography>
     </Button>
@@ -105,20 +109,6 @@ const EmptyChapter = (props) => {
   );
 };
 
-const ContentChapter = (props) => {
-  const { chapter } = props;
-  const classes = useStyles();
-  return (
-    <li className={classes.chapterListItem}>
-      {chapter.body ? (
-        <FullChapter chapter={chapter} />
-      ) : (
-        <EmptyChapter chapter={chapter} />
-      )}
-    </li>
-  );
-};
-
 const RotatingChevron = (props) => {
   const { open, setOpen } = props;
   const handleRotate = () => setOpen(!open);
@@ -132,7 +122,7 @@ const RotatingChevron = (props) => {
 };
 
 const ContentPart = (props) => {
-  const { part } = props;
+  const { part, partIdx } = props;
   const chapters = useSelector((state) => selectChaptersOfPart(state, part));
   const readingPartId = useSelector(selectReadingPartId);
   const [open, setOpen] = useState(part._id === readingPartId);
@@ -149,9 +139,19 @@ const ContentPart = (props) => {
         <ol className={classes.chapterList}>
           {chapters.map((chapter, index) =>
             chapter.body ? (
-              <ContentChapter chapter={chapter} key={index} />
+              <FullChapter
+                chapter={chapter}
+                partIdx={partIdx}
+                index={index}
+                key={index}
+              />
             ) : (
-              <EmptyChapter chapter={chapter} key={index} />
+              <EmptyChapter
+                chapter={chapter}
+                partIdx={partIdx}
+                index={index}
+                key={index}
+              />
             )
           )}
         </ol>
@@ -160,21 +160,65 @@ const ContentPart = (props) => {
   );
 };
 
+// const UserActions = () => {
+//   const [open, setOpen] = useState(true);
+//   const actions = [
+//     { path: "/contact", heading: "contact" },
+//     { path: "/copyaccess", heading: "copy" },
+//   ];
+
+//   const classes = useStyles();
+//   return (
+//     <>
+//       <Box mt={2} display="flex" alignItems="center" flexWrap="wrap">
+//         <Typography component="h2" variant="h2">
+//           appendix
+//         </Typography>
+//         <RotatingChevron open={open} setOpen={setOpen} />
+//       </Box>
+//       <Collapse in={open}>
+//         <ol className={classes.chapterList}>
+//           {actions.map((action, index) => {
+//             return (
+//               <Button
+//                 className={classes.chapterTitle}
+//                 component={Link}
+//                 to={action.path}
+//               >
+//                 <Typography variant="h3">{action.heading}</Typography>
+//               </Button>
+//             );
+//           })}
+//         </ol>
+//       </Collapse>
+//     </>
+//   );
+// };
+
 const Content = () => {
-  const book = useSelector(selectAllnighter);
+  const book = useSelector(selectFeaturedBook);
   const parts = useSelector((state) => selectPartsOfBook(state, book));
 
   return (
-    <Container maxWidth="sm">
-      <Box mt={6} mb={3}>
-        <Typography component="h1" variant="h1">
-          {book.title}
-        </Typography>
-      </Box>
-      {parts.map((part, index) => (
-        <ContentPart part={part} key={index} />
-      ))}
-    </Container>
+    <>
+      <Header hideTitle={true}></Header>
+      <Page>
+        <Box mt={8} mb={3}>
+          <Typography component="h1" variant="h1">
+            {book.title}
+          </Typography>
+        </Box>
+        <Box>
+          {parts.map((part, index) => (
+            <ContentPart part={part} partIdx={index} key={index} />
+          ))}
+        </Box>
+        {/* <Box mt={3}>
+          <UserActions />
+        </Box> */}
+      </Page>
+      <Footer />
+    </>
   );
 };
 

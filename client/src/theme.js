@@ -1,11 +1,12 @@
-import { createMuiTheme, responsiveFontSizes } from "@material-ui/core";
+import { responsiveFontSizes } from "@material-ui/core";
+import { createTheme } from "@material-ui/core/styles";
 
-const theme = createMuiTheme({
-  palette: {
-    background: {
-      default: "#FFFDFC",
-    },
-  },
+const theme = createTheme({
+  // palette: {
+  //   background: {
+  //     default: "rgb(254, 249, 245)", // blush pink
+  //   },
+  // },
   typography: {
     fontFamily: ["Arial", "sans-serif"].join(","),
     h1: {

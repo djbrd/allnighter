@@ -6,7 +6,18 @@ const cors = require("cors");
 
 require("dotenv").config();
 
-mongoose.connect(keys.mongoURI);
+mongoose
+  .connect(keys.mongoURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("Connected to the database!");
+  })
+  .catch((err) => {
+    console.log("Cannot connect to the database!", err);
+    process.exit();
+  });
 
 const app = express();
 
@@ -23,6 +34,8 @@ require("./routes/auth")(app);
 app.use("/books", require("./routes/books"));
 app.use("/parts", require("./routes/parts"));
 app.use("/chapters", require("./routes/chapters"));
+app.use("/contacts", require("./routes/contacts"));
+app.use("/accessBids", require("./routes/accessBids"));
 
 app.use((err, req, res, next) => {
   res.status(422).send({ error: err.message, stack: err.stack });

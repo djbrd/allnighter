@@ -15,15 +15,15 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 
 import PartForm from "./PartForm.js";
 import Chapters from "./Chapters.js";
-import FormDialog from "../../common/components/FormDialog";
-import ConfirmDialog from "../../common/components/ConfirmDialog";
-import { deletePart } from "../actions";
-import { selectPartsOfBook } from "../selectors";
-import { api } from "../../utils/api";
+import FormDialog from "../../../common/components/FormDialog";
+import ConfirmDialog from "../../../common/components/ConfirmDialog";
+import { deletePart } from "../../actions";
+import { selectPartsOfBook } from "../../selectors";
+import { api } from "../../../utils/api";
 
 const PartListItem = (props) => {
-  const { part, bookId } = props;
-  const [open, setOpen] = useState(true);
+  const { part, index, bookId } = props;
+  const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const dispatch = useDispatch();
@@ -58,7 +58,7 @@ const PartListItem = (props) => {
         Confirm deletion of part (and any chapters in it)?
       </ConfirmDialog>
       <Collapse in={open} timeout="auto" unmountOnExit>
-        <Chapters part={part} />
+        <Chapters part={part} partIdx={index} />
       </Collapse>
     </>
   );
@@ -83,8 +83,13 @@ const Parts = (props) => {
     <>
       <List dense component="div" className={classes.nested}>
         <div className={classes.insideList}>
-          {parts.map((part) => (
-            <PartListItem part={part} bookId={book._id} key={part._id} />
+          {parts.map((part, index) => (
+            <PartListItem
+              part={part}
+              index={index}
+              bookId={book._id}
+              key={part._id}
+            />
           ))}
         </div>
         <ListItem>

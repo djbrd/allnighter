@@ -5,10 +5,10 @@ import { useDispatch } from "react-redux";
 
 import Button from "@material-ui/core/Button";
 
-import ControlledTextField from "../../common/components/ControlledTextField";
-import { createPart } from "../actions";
-import { setErrorsFromResponse } from "../../utils";
-import { api } from "../../utils/api";
+import ControlledTextField from "../../../common/components/ControlledTextField";
+import { createPart } from "../../actions";
+import { setErrorsFromResponse } from "../../../utils";
+import { api } from "../../../utils/api";
 
 const schema = Yup.object().shape({
   title: Yup.string().required("Required"),
@@ -43,7 +43,9 @@ const PartForm = (props) => {
       <Controller
         name="title"
         control={control}
-        render={(props) => <ControlledTextField {...props} autofocus />}
+        render={(props) => (
+          <ControlledTextField {...props} autofocus required />
+        )}
       />
       <Button
         type="submit"

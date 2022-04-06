@@ -103,9 +103,6 @@ parts.post(
       // if (!req.file) {
       //   return res.status(422).send({ error: "File is required" });
       // }
-
-      console.log(req.user);
-
       let newChapter = {
         title: req.body.title,
       };

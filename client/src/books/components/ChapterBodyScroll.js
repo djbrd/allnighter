@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
 import {
+  selectChapterId,
   selectChapterParagraphs,
   selectReadingSentenceIdx,
   selectSentenceStartTimes,
@@ -13,19 +14,18 @@ import { setSentence } from "../actions";
 
 const useStyles = makeStyles((theme) => ({
   activeSentence: {
-    backgroundColor: "#FEFEBE",
+    // backgroundColor: "#FFF0F5",
+  },
+  inactiveSentence: {
+    color: theme.palette.grey[800],
+  },
+  bodyPadding: {
+    paddingBottom: "70vh",
   },
 }));
 
 const Sentence = (props) => {
-  const {
-    // active,
-    addSpace,
-    text,
-    sentenceId,
-    startTime,
-    setPlaybackTime,
-  } = props;
+  const { addSpace, text, sentenceId, startTime, setPlaybackTime } = props;
   const sentenceRef = useRef(null);
   const classes = useStyles();
 
@@ -57,7 +57,9 @@ const Sentence = (props) => {
       <span
         ref={sentenceRef}
         className={
-          activeSentenceIdx === sentenceId ? classes.activeSentence : ""
+          activeSentenceIdx === sentenceId
+            ? classes.activeSentence
+            : classes.inactiveSentence
         }
         onClick={onClick}
       >
@@ -69,7 +71,10 @@ const Sentence = (props) => {
 };
 
 const ChapterBodyScroll = ({ setPlaybackTime }) => {
-  const { chapterId } = useParams();
+  const { partIdx, chapterIdx } = useParams();
+  const chapterId = useSelector((state) =>
+    selectChapterId(state, partIdx, chapterIdx)
+  );
   const paragraphs = useSelector((state) =>
     selectChapterParagraphs(state, chapterId)
   );
@@ -77,13 +82,15 @@ const ChapterBodyScroll = ({ setPlaybackTime }) => {
     selectSentenceStartTimes(state, chapterId)
   );
 
+  const classes = useStyles();
+
   let sentenceCount = 0;
 
   return (
-    <>
+    <div className={classes.bodyPadding}>
       {paragraphs.map((sentences, index) => {
         return (
-          <Typography variant={"body1"} key={"paragraph_" + index} paragraph>
+          <Typography variant="body1" key={"paragraph_" + index} paragraph>
             {sentences.map((sentence, index) => {
               return (
                 <Sentence
@@ -103,7 +110,7 @@ const ChapterBodyScroll = ({ setPlaybackTime }) => {
           </Typography>
         );
       })}
-    </>
+    </div>
   );
 };
 

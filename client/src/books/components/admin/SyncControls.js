@@ -13,23 +13,27 @@ import {
   setSentenceStartTime,
   nextSentence,
   startReading,
-} from "../actions";
+} from "../../actions";
 import {
+  selectChapterId,
   selectSentenceStartTimes,
   selectReadingSentenceIdx,
-} from "../selectors";
+} from "../../selectors";
 
 import {
   //PLAYBACK_LOADING,
   PLAYBACK_READY,
   //PLAYBACK_PLAYING,
   PLAYBACK_ENDED,
-} from "../hooks/playbackStates";
+} from "../../hooks/playbackStates";
 
-import { api } from "../../utils/api";
+import { api } from "../../../utils/api";
 
 const SyncControls = (props) => {
-  const { chapterId } = useParams();
+  const { partIdx, chapterIdx } = useParams();
+  const chapterId = useSelector((state) =>
+    selectChapterId(state, partIdx, chapterIdx)
+  );
   const { getPlaybackTime, startPlayback, pausePlayback, playbackState } =
     props;
 

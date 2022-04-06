@@ -12,17 +12,35 @@ export const loadScript = (src) => {
 
 export const setErrorsFromResponse = (response, setError) => {
   if (response.status === 422) {
-    for (const fieldKey in response.data) {
-      const msg = response.data[fieldKey];
-      setError(fieldKey, { type: "manual", message: msg });
+    if (response.data.error) {
+      setError("form", {
+        type: "manual",
+        message: response.data.error,
+      });
+    } else {
+      for (const fieldKey in response.data) {
+        console.log(fieldKey);
+        const msg = response.data[fieldKey];
+        setError(fieldKey, { type: "manual", message: msg });
+      }
     }
   } else if (response.status === 401) {
-    // TODO: set error on form
-    // setError("password", { type: "manual", message: "Invalid password" });
     console.log("401: ", response);
+    setError("form", { type: "manual", message: "Not authorized" });
   } else if (response.status === 500) {
-    // TODO - show a snackbar?
     console.log("500: ", response);
+    setError("form", {
+      type: "manual",
+      message: "500 error. Please try again later.",
+    });
+  } else if (response.status === 404) {
+    console.log("404: ", response);
+    setError("form", {
+      type: "manual",
+      message: "404 error. Please try again later.",
+    });
+  } else {
+    console.log("WHAT? ", response);
   }
 };
 

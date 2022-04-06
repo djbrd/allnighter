@@ -4,11 +4,11 @@ import { useParams } from "react-router-dom";
 
 import { Typography } from "@material-ui/core";
 
-import ChapterLayout from "./ChapterLayout";
+import ChapterLayout from "../ChapterLayout";
 
-import { splitSentence, mergeSentences } from "../actions";
-import { selectChapterParagraphs } from "../selectors";
-import { api } from "../../utils/api";
+import { splitSentence, mergeSentences } from "../../actions";
+import { selectChapterId, selectChapterParagraphs } from "../../selectors";
+import { api } from "../../../utils/api";
 
 // Background colors for sentences
 const backgroundColors = [
@@ -20,8 +20,7 @@ const backgroundColors = [
 ];
 
 const Sentence = (props) => {
-  const { chapterId } = useParams();
-  const { addSpace, text, paragraphId, sentenceId, color } = props;
+  const { addSpace, text, chapterId, paragraphId, sentenceId, color } = props;
   const dispatch = useDispatch();
 
   const onSplitSentence = () => {
@@ -64,7 +63,10 @@ const Sentence = (props) => {
 };
 
 const ChapterBreath = () => {
-  const { chapterId } = useParams();
+  const { partIdx, chapterIdx } = useParams();
+  const chapterId = useSelector((state) =>
+    selectChapterId(state, partIdx, chapterIdx)
+  );
   const paragraphs = useSelector((state) =>
     selectChapterParagraphs(state, chapterId)
   );
@@ -104,6 +106,7 @@ const ChapterBreath = () => {
                   return (
                     <Sentence
                       key={"sentence_" + sentenceCount++}
+                      chapterId={chapterId}
                       paragraphId={paragraphIdx}
                       sentenceId={sentenceIdx}
                       text={sentence}
