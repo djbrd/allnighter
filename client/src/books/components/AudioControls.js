@@ -2,16 +2,16 @@ import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
-import { Button, Grid } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { Button, Grid } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
-import StopIcon from "@material-ui/icons/Stop";
-// import PauseIcon from "@material-ui/icons/Pause";
-// import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
-// import FastRewindIcon from "@material-ui/icons/FastRewind";
-// import FastForwardIcon from "@material-ui/icons/FastForward";
-// import SkipNextIcon from "@material-ui/icons/SkipNext";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import StopIcon from "@mui/icons-material/Stop";
+// import PauseIcon from "@mui/icons-material/Pause";
+// import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
+// import FastRewindIcon from "@mui/icons-material/FastRewind";
+// import FastForwardIcon from "@mui/icons-material/FastForward";
+// import SkipNextIcon from "@mui/icons-material/SkipNext";
 
 import {
   startReading,
@@ -142,17 +142,18 @@ const AudioControls = (props) => {
     <Grid
       container
       direction="row"
-      justify="center"
+      justifyContent="center"
       alignItems="center"
       className={classes.grid}
     >
       {playbackState === PLAYBACK_PLAYING && syncingText ? (
-        <Button onClick={pause} size="large">
+        <Button onClick={pause} color="grey" size="large">
           <StopIcon />
         </Button>
       ) : (
         <Button
           onClick={play}
+          color="grey"
           disabled={
             playbackState !== PLAYBACK_READY ||
             (playbackState === PLAYBACK_PLAYING && !syncingText)

@@ -2,11 +2,11 @@ import React, { useRef, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
-import { Button, Grid } from "@material-ui/core";
+import { Button, Grid } from "@mui/material";
 
-import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
-import AddIcon from "@material-ui/icons/Add";
-import PauseIcon from "@material-ui/icons/Pause";
+import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
+import AddIcon from "@mui/icons-material/Add";
+import PauseIcon from "@mui/icons-material/Pause";
 
 import {
   clearSentenceStartTimes,
@@ -91,17 +91,21 @@ const SyncControls = (props) => {
   };
 
   return (
-    <Grid container direction="row" justify="center" alignItems="center">
+    <Grid container direction="row" justifyContent="center" alignItems="center">
       {syncRecording ? (
-        <Button onClick={pause}>
+        <Button color="grey" onClick={pause}>
           <PauseIcon />
         </Button>
       ) : (
-        <Button onClick={record} disabled={playbackState !== PLAYBACK_READY}>
+        <Button
+          color="grey"
+          onClick={record}
+          disabled={playbackState !== PLAYBACK_READY}
+        >
           <FiberManualRecordIcon />
         </Button>
       )}
-      <Button onClick={onSentenceEnd} disabled={!syncRecording}>
+      <Button color="grey" onClick={onSentenceEnd} disabled={!syncRecording}>
         <AddIcon />
       </Button>
     </Grid>

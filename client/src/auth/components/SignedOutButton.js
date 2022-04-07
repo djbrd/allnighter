@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
-import { IconButton, Avatar } from "@material-ui/core";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import { IconButton, Avatar } from "@mui/material";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 import AuthDialog from "./AuthDialog";
 

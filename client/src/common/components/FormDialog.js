@@ -1,6 +1,6 @@
-import { makeStyles } from "@material-ui/core/styles";
-import Dialog from "@material-ui/core/Dialog";
-import Container from "@material-ui/core/Container";
+import makeStyles from '@mui/styles/makeStyles';
+import Dialog from "@mui/material/Dialog";
+import Container from "@mui/material/Container";
 
 const useStyles = makeStyles((theme) => ({
   container: {

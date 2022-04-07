@@ -2,19 +2,19 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
-import { makeStyles } from "@material-ui/core/styles";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import IconButton from "@material-ui/core/IconButton";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
-import DeleteIcon from "@material-ui/icons/Delete";
-import RecordVoiceOverIcon from "@material-ui/icons/RecordVoiceOver";
-import SyncIcon from "@material-ui/icons/Sync";
-import ReorderIcon from "@material-ui/icons/Reorder";
-import PublishIcon from "@material-ui/icons/Publish";
-import BookIcon from "@material-ui/icons/Book";
+import makeStyles from '@mui/styles/makeStyles';
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import IconButton from "@mui/material/IconButton";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import DeleteIcon from "@mui/icons-material/Delete";
+import RecordVoiceOverIcon from "@mui/icons-material/RecordVoiceOver";
+import SyncIcon from "@mui/icons-material/Sync";
+import ReorderIcon from "@mui/icons-material/Reorder";
+import PublishIcon from "@mui/icons-material/Publish";
+import BookIcon from "@mui/icons-material/Book";
 
 import FormDialog from "../../../common/components/FormDialog";
 import ConfirmDialog from "../../../common/components/ConfirmDialog";
@@ -122,33 +122,31 @@ const Chapters = (props) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const classes = useStyles();
 
-  return (
-    <>
-      <List dense component="div" className={classes.doubleNested}>
-        <div className={classes.insideList}>
-          {chapters.map((chapter, index) => (
-            <ChapterListItem
-              chapter={chapter}
-              partId={part._id}
-              partIdx={partIdx}
-              index={index}
-              key={chapter._id}
-            />
-          ))}
-        </div>
-        <ListItem>
-          <ListItemAvatar>
-            <IconButton onClick={() => setDialogOpen(true)}>
-              <AddCircleIcon />
-            </IconButton>
-          </ListItemAvatar>
-        </ListItem>
-      </List>
-      <FormDialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-        <ChapterForm partId={part._id} onClose={() => setDialogOpen(false)} />
-      </FormDialog>
-    </>
-  );
+  return <>
+    <List dense component="div" className={classes.doubleNested}>
+      <div className={classes.insideList}>
+        {chapters.map((chapter, index) => (
+          <ChapterListItem
+            chapter={chapter}
+            partId={part._id}
+            partIdx={partIdx}
+            index={index}
+            key={chapter._id}
+          />
+        ))}
+      </div>
+      <ListItem>
+        <ListItemAvatar>
+          <IconButton onClick={() => setDialogOpen(true)} size="large">
+            <AddCircleIcon />
+          </IconButton>
+        </ListItemAvatar>
+      </ListItem>
+    </List>
+    <FormDialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+      <ChapterForm partId={part._id} onClose={() => setDialogOpen(false)} />
+    </FormDialog>
+  </>;
 };
 
 export default Chapters;

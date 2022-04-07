@@ -3,7 +3,7 @@ import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch } from "react-redux";
 
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 
 import ControlledTextField from "../../../common/components/ControlledTextField";
 import { createPart } from "../../actions";

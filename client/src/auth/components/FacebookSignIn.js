@@ -1,9 +1,9 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import { useDispatch, useSelector } from "react-redux";
 
-import Button from "@material-ui/core/Button";
-import FacebookIcon from "@material-ui/icons/Facebook";
+import Button from "@mui/material/Button";
+import FacebookIcon from "@mui/icons-material/Facebook";
 
 import { facebookSignIn } from "../actions";
 import { selectIsAuthorising } from "../selectors";

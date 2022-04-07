@@ -2,8 +2,8 @@ import { useForm, Controller } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { Button, /*Container, */ Typography, Box } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { Button, /*Container, */ Typography, Box } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 
 import ControlledTextField from "../../common/components/ControlledTextField";
 import ErrorSnackbar from "../../common/components/ErrorSnackbar";
@@ -70,7 +70,12 @@ const ContactForm = (props) => {
                 name="email"
                 control={control}
                 render={(props) => (
-                  <ControlledTextField {...props} type="email" required />
+                  <ControlledTextField
+                    {...props}
+                    type="email"
+                    required
+                    autoFocus
+                  />
                 )}
               />
             </div>
@@ -78,17 +83,12 @@ const ContactForm = (props) => {
               name="message"
               control={control}
               render={(props) => (
-                <ControlledTextField {...props} multiline required autoFocus />
+                <ControlledTextField {...props} multiline required />
               )}
             />
 
             <Box pt={1} pb={verticalPadding}>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                disabled={isSubmitting}
-              >
+              <Button type="submit" variant="contained" disabled={isSubmitting}>
                 Submit
               </Button>
             </Box>

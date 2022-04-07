@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import { Button } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import MenuIcon from "@material-ui/icons/Menu";
+import { Button } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import MenuIcon from "@mui/icons-material/Menu";
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -32,7 +32,7 @@ const ContentButton = () => {
         to="/"
         className={styles.button}
         disableRipple
-        disableFocusRippleß
+        disableFocusRipple
       >
         <MenuIcon />
       </Button>

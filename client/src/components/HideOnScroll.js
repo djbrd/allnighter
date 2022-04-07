@@ -1,4 +1,4 @@
-import { Slide } from "@material-ui/core";
+import { Slide } from "@mui/material";
 
 // const HideOnScroll = ({ children }) => {
 //   return children;

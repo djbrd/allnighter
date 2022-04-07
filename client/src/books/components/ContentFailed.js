@@ -1,4 +1,4 @@
-import { Container, Typography, Box } from "@material-ui/core";
+import { Container, Typography, Box } from "@mui/material";
 
 const ContentFailed = () => {
   return (

@@ -1,15 +1,11 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import {
-  Collapse,
-  makeStyles,
-  Button,
-  Typography,
-  Box,
-} from "@material-ui/core";
+import { Collapse, Button, Typography, Box } from "@mui/material";
 
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import makeStyles from "@mui/styles/makeStyles";
+
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
@@ -71,6 +67,7 @@ const FullChapter = (props) => {
       className={classes.chapterTitle}
       component={Link}
       to={`/${partIdx}/${index}`}
+      color="grey"
     >
       <Typography variant="h3">{chapter.title}</Typography>
     </Button>
@@ -86,7 +83,11 @@ const EmptyChapter = (props) => {
   });
   return (
     <>
-      <Button className={classes.chapterTitle} {...bindHover(popupState)}>
+      <Button
+        color="grey"
+        className={classes.chapterTitle}
+        {...bindHover(popupState)}
+      >
         <Typography variant="h3" className={classes.emptyChapterText}>
           {chapter.title}
         </Typography>

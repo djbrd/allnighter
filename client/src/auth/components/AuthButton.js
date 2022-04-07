@@ -1,9 +1,9 @@
 import React from "react";
 import { useSelector } from "react-redux";
 
-import Button from "@material-ui/core/Button";
-import Avatar from "@material-ui/core/Avatar";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import Button from "@mui/material/Button";
+import Avatar from "@mui/material/Avatar";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import SignedInButton from "./SignedInButton";
 import SignedOutButton from "./SignedOutButton";
@@ -21,7 +21,7 @@ const AuthButton = () => {
   return (
     <>
       {isInitialising || isSigningOut ? (
-        <Button size="small">
+        <Button color="grey" size="small">
           <Avatar>
             <CircularProgress />
           </Avatar>

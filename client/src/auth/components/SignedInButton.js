@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { IconButton, Avatar, Menu, MenuItem } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { IconButton, Avatar, Menu, MenuItem } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 
 import { signout } from "../actions";
 import { selectUserName } from "../selectors";

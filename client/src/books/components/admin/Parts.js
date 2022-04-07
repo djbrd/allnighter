@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { makeStyles } from "@material-ui/core/styles";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import Collapse from "@material-ui/core/Collapse";
-import IconButton from "@material-ui/core/IconButton";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
-import DeleteIcon from "@material-ui/icons/Delete";
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
+import makeStyles from '@mui/styles/makeStyles';
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import Collapse from "@mui/material/Collapse";
+import IconButton from "@mui/material/IconButton";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 
 import PartForm from "./PartForm.js";
 import Chapters from "./Chapters.js";
@@ -40,28 +40,26 @@ const PartListItem = (props) => {
     setDeleting(false);
   };
 
-  return (
-    <>
-      <ListItem button onClick={() => setOpen(!open)}>
-        <ListItemText primary={part.title} />
-        <IconButton onClick={() => setConfirmOpen(true)} disabled={deleting}>
-          <DeleteIcon />
-        </IconButton>
-        {open ? <ExpandLess /> : <ExpandMore />}
-      </ListItem>
-      <ConfirmDialog
-        title="Delete Part?"
-        open={confirmOpen}
-        onClose={() => setConfirmOpen(false)}
-        onConfirm={onConfirmDelete}
-      >
-        Confirm deletion of part (and any chapters in it)?
-      </ConfirmDialog>
-      <Collapse in={open} timeout="auto" unmountOnExit>
-        <Chapters part={part} partIdx={index} />
-      </Collapse>
-    </>
-  );
+  return <>
+    <ListItem button onClick={() => setOpen(!open)}>
+      <ListItemText primary={part.title} />
+      <IconButton onClick={() => setConfirmOpen(true)} disabled={deleting} size="large">
+        <DeleteIcon />
+      </IconButton>
+      {open ? <ExpandLess /> : <ExpandMore />}
+    </ListItem>
+    <ConfirmDialog
+      title="Delete Part?"
+      open={confirmOpen}
+      onClose={() => setConfirmOpen(false)}
+      onConfirm={onConfirmDelete}
+    >
+      Confirm deletion of part (and any chapters in it)?
+    </ConfirmDialog>
+    <Collapse in={open} timeout="auto" unmountOnExit>
+      <Chapters part={part} partIdx={index} />
+    </Collapse>
+  </>;
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -79,36 +77,34 @@ const Parts = (props) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const classes = useStyles();
 
-  return (
-    <>
-      <List dense component="div" className={classes.nested}>
-        <div className={classes.insideList}>
-          {parts.map((part, index) => (
-            <PartListItem
-              part={part}
-              index={index}
-              bookId={book._id}
-              key={part._id}
-            />
-          ))}
-        </div>
-        <ListItem>
-          <ListItemAvatar>
-            <IconButton onClick={() => setDialogOpen(true)}>
-              <AddCircleIcon />
-            </IconButton>
-          </ListItemAvatar>
-        </ListItem>
-      </List>
-      <FormDialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-        <PartForm
-          bookId={book._id}
-          open={dialogOpen}
-          onClose={() => setDialogOpen(false)}
-        />
-      </FormDialog>
-    </>
-  );
+  return <>
+    <List dense component="div" className={classes.nested}>
+      <div className={classes.insideList}>
+        {parts.map((part, index) => (
+          <PartListItem
+            part={part}
+            index={index}
+            bookId={book._id}
+            key={part._id}
+          />
+        ))}
+      </div>
+      <ListItem>
+        <ListItemAvatar>
+          <IconButton onClick={() => setDialogOpen(true)} size="large">
+            <AddCircleIcon />
+          </IconButton>
+        </ListItemAvatar>
+      </ListItem>
+    </List>
+    <FormDialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+      <PartForm
+        bookId={book._id}
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+      />
+    </FormDialog>
+  </>;
 };
 
 export default Parts;

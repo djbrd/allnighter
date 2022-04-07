@@ -2,10 +2,10 @@ import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
-import { Fab } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
-import PauseIcon from "@material-ui/icons/Pause";
+import { Fab } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PauseIcon from "@mui/icons-material/Pause";
 
 import { startReading, nextSentence } from "../actions";
 import {

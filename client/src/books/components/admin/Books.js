@@ -9,9 +9,9 @@ import {
   ListItemAvatar,
   Collapse,
   IconButton,
-} from "@material-ui/core";
+} from "@mui/material";
 
-import { AddCircle, ExpandLess, ExpandMore } from "@material-ui/icons";
+import { AddCircle, ExpandLess, ExpandMore } from "@mui/icons-material";
 
 import BookForm from "./BookForm.js";
 import Parts from "./Parts.js";
@@ -52,7 +52,7 @@ const Books = () => {
             ))}
             <ListItem>
               <ListItemAvatar>
-                <IconButton onClick={() => setDialogOpen(true)}>
+                <IconButton onClick={() => setDialogOpen(true)} size="large">
                   <AddCircle />
                 </IconButton>
               </ListItemAvatar>

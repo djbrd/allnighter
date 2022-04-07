@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Route, Routes, Outlet } from "react-router-dom";
-import { CssBaseline } from "@material-ui/core";
-import { ThemeProvider } from "@material-ui/core/styles";
+import { CssBaseline } from "@mui/material";
+import { ThemeProvider, StyledEngineProvider } from "@mui/material/styles";
 import theme from "../theme.js";
 
 import Header from "./Header";
@@ -36,9 +36,9 @@ const NoMatch = () => {
 
 const App = () => {
   return (
-    <div>
-      <BrowserRouter>
-        <ThemeProvider theme={theme}>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
           <CssBaseline />
           <Routes>
             <Route index element={<Content />} />
@@ -62,9 +62,9 @@ const App = () => {
             </Route>
             <Route path="*" element={<NoMatch />} />
           </Routes>
-        </ThemeProvider>
-      </BrowserRouter>
-    </div>
+        </BrowserRouter>
+      </ThemeProvider>
+    </StyledEngineProvider>
   );
 };
 

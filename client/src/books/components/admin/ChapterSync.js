@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import Drawer from "@material-ui/core/Drawer";
+import Drawer from "@mui/material/Drawer";
 import { useSelector } from "react-redux";
 
 import ChapterLayout from "../ChapterLayout";

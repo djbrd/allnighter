@@ -1,6 +1,6 @@
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 
-import { Container, Typography } from "@material-ui/core";
+import { Container, Typography } from "@mui/material";
 
 import LocalSignIn from "./LocalSignIn";
 import GoogleSignIn from "./GoogleSignIn";

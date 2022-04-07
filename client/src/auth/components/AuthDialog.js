@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 
-import Dialog from "@material-ui/core/Dialog";
+import Dialog from "@mui/material/Dialog";
 import AuthForm from "./AuthForm";
 
 import { selectIsAuthorising } from "../selectors";

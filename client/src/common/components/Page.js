@@ -1,13 +1,13 @@
 import { useLayoutEffect, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Box } from "@material-ui/core";
+import makeStyles from '@mui/styles/makeStyles';
+import { Box } from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
   paper: (props) => ({
     paddingLeft: props.readingPadding,
     paddingRight: props.readingPadding,
     background: theme.palette.background.paper,
-    minHeight: `calc(100vh - ${theme.spacing(11)}px)`,
+    minHeight: `calc(100vh - ${theme.spacing(11)})`,
   }),
   textContainer: (props) => ({
     width: props.readingWidth,

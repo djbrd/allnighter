@@ -3,9 +3,9 @@ import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch } from "react-redux";
 
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Chip from "@material-ui/core/Chip";
+import makeStyles from '@mui/styles/makeStyles';
+import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
 
 import { createChapterBody } from "../../actions";
 import { setErrorsFromResponse } from "../../../utils";

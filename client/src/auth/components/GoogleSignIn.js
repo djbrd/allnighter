@@ -1,8 +1,8 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from '@mui/styles/makeStyles';
 import { useDispatch, useSelector } from "react-redux";
 
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 
 import { googleSignIn } from "../actions";
 import { selectIsAuthorising } from "../selectors";

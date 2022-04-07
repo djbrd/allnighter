@@ -1,14 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Drawer, List, ListItem, Button, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { Drawer, List, ListItem, Button, Typography } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import Sharing from "../meta/components/Sharing";
 
 const routes = [
   { label: "Content", path: "/" },
   { label: "Contact", path: "/contact" },
-  { label: "Promo copy/access", path: "/copyaccess" },
-  { label: '"Share"', path: "/sharing" },
+  { label: "Get a copy/access", path: "/copyaccess" },
+  // { label: '"Share"', path: "/sharing" },
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -37,6 +37,7 @@ const NavDrawer = (props) => {
                   className={classes.navLink}
                   component={Link}
                   to={route.path}
+                  color="grey"
                 >
                   <Typography variant="h3">{route.label}</Typography>
                 </Button>

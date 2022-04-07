@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { AppBar, Toolbar, useScrollTrigger, Slide } from "@material-ui/core";
+import makeStyles from '@mui/styles/makeStyles';
+import { AppBar, Toolbar, useScrollTrigger, Slide } from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {

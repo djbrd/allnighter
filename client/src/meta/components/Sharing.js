@@ -1,5 +1,5 @@
-import { Grid, Box } from "@material-ui/core";
-import { useTheme } from "@material-ui/core/styles";
+import { Grid, Box } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 import {
   FacebookShareButton,
@@ -36,7 +36,7 @@ const Sharing = () => {
         justify="space-between"
         alignItems="center"
       > */}
-      <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={12}>
+      <Box display="grid" gridTemplateColumns="repeat(6, 1fr)" gap={1} pl={1}>
         <FacebookShareButton url={url} quote={summary}>
           <FacebookIcon size={size} borderRadius={borderRadius} />
         </FacebookShareButton>

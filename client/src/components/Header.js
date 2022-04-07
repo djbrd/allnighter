@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from "@mui/styles/makeStyles";
 import {
   AppBar,
   Toolbar,
@@ -9,8 +9,8 @@ import {
   // IconButton,
   Button,
   useScrollTrigger,
-} from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 
 import NavDrawer from "./NavDrawer";
 import HideOnScroll from "./HideOnScroll";
@@ -78,13 +78,13 @@ const Header = ({ hideTitle }) => {
             <Grid
               container
               direction="row"
-              justify="center"
+              justifyContent="center"
               alignItems="center"
               className={classes.grid}
             >
               <div className={classes.side}>
                 <Button
-                  // color="inherit"
+                  color="grey"
                   className={classes.menuButton}
                   size="large"
                   onClick={() => setDrawerOpen(true)}
@@ -102,6 +102,7 @@ const Header = ({ hideTitle }) => {
                     className={classes.titleButton}
                     component={Link}
                     to={"/"}
+                    color="grey"
                   >
                     <Typography variant="body2" className={classes.title}>
                       {process.env.REACT_APP_FEATURED_BOOK_TITLE}

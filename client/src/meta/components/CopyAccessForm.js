@@ -13,8 +13,8 @@ import {
   FormControl,
   FormLabel,
   FormHelperText,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 
 import ControlledTextField from "../../common/components/ControlledTextField";
 import ErrorSnackbar from "../../common/components/ErrorSnackbar";
@@ -182,7 +182,7 @@ const CopyAccessForm = (props) => {
                   <ControlledTextField
                     {...props}
                     type="email"
-                    autofocus
+                    autoFocus
                     required
                   />
                 )}
@@ -197,12 +197,7 @@ const CopyAccessForm = (props) => {
             />
 
             <Box pt={1} pb={verticalPadding}>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                disabled={isSubmitting}
-              >
+              <Button type="submit" variant="contained" disabled={isSubmitting}>
                 Submit
               </Button>
             </Box>
