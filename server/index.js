@@ -1,21 +1,22 @@
 const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
-const keys = require("./config/keys");
-const cors = require("cors");
+// const cors = require("cors");
 
-require("dotenv").config();
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
 
 mongoose
-  .connect(keys.mongoURI, {
+  .connect(process.env.ATLAS_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
   .then(() => {
-    console.log("Connected to the database!");
+    console.log("Connected to the database");
   })
   .catch((err) => {
-    console.log("Cannot connect to the database!", err);
+    console.log("Cannot connect to the database", err);
     process.exit();
   });
 
@@ -24,13 +25,11 @@ const app = express();
 // app setup
 app.use(morgan("combined"));
 // TODO - restrict cors to particular url
-app.use(cors());
+// app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-require("./routes/home")(app);
-require("./routes/auth")(app);
-
+app.use("/", require("./routes/auth"));
 app.use("/books", require("./routes/books"));
 app.use("/parts", require("./routes/parts"));
 app.use("/chapters", require("./routes/chapters"));
@@ -42,6 +41,6 @@ app.use((err, req, res, next) => {
 });
 
 // server setup
-const port = process.env.PORT || 3090;
+const port = process.env.PORT || 3000;
 
 app.listen(port);

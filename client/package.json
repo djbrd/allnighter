@@ -32,6 +32,7 @@
     "web-vitals": "^1.1.0",
     "yup": "^0.32.9"
   },
+  "proxy": "http://localhost:3000",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

@@ -1,13 +1,15 @@
+const express = require("express");
+const auth = express.Router();
+
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
-const config = require("../config/keys");
 const { requireSignin, requireFacebook } = require("../services/auth");
 const { OAuth2Client } = require("google-auth-library");
 
 const tokenForUser = (user) => {
   const timestamp = new Date().getTime();
   // sub == subject, iat == issued at time
-  return jwt.sign({ sub: user.id, iat: timestamp }, config.secret);
+  return jwt.sign({ sub: user.id, iat: timestamp }, process.env.JWT_SECRET);
 };
 
 const userResponse = (user) => {
@@ -18,62 +20,62 @@ const userResponse = (user) => {
   };
 };
 
-module.exports = (app) => {
-  app.post("/signup", (req, res, next) => {
-    const { email, password } = req.body;
+auth.post("/signup", (req, res, next) => {
+  const { email, password } = req.body;
 
-    if (!email || !password) {
-      return res.status(422).send({ error: "Email and password required" });
+  if (!email || !password) {
+    return res.status(422).send({ error: "Email and password required" });
+  }
+
+  // See if a user with given email exists
+  User.findOne({ email: email }, (err, existingUser) => {
+    if (err) {
+      return next(err);
+    }
+    // If user exists return error
+    if (existingUser) {
+      return res.status(422).send({ email: "Email is in use" });
     }
 
-    // See if a user with given email exists
-    User.findOne({ email: email }, (err, existingUser) => {
+    // Else, create and save user record
+    const user = new User({ email, password });
+    user.save((err) => {
       if (err) {
-        return next(err);
-      }
-      // If user exists return error
-      if (existingUser) {
-        return res.status(422).send({ email: "Email is in use" });
+        return res.status(422).send({ error: err });
       }
 
-      // Else, create and save user record
-      const user = new User({ email, password });
-      user.save((err) => {
-        if (err) {
-          return res.status(422).send({ error: err });
-        }
-
-        res.json(userResponse(user));
-      });
+      res.json(userResponse(user));
     });
   });
+});
 
-  app.post("/signin", requireSignin, (req, res, next) => {
-    res.json(userResponse(req.user));
+auth.post("/signin", requireSignin, (req, res, next) => {
+  res.json(userResponse(req.user));
+});
+
+auth.post("/auth/google", async (req, res, next) => {
+  const { tokenId } = req.body;
+
+  const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+  const ticket = await client.verifyIdToken({
+    idToken: tokenId,
+    audience: process.env.GOOGLE_CLIENT_ID,
   });
 
-  app.post("/auth/google", async (req, res, next) => {
-    const { tokenId } = req.body;
+  const { email, sub, name, given_name, family_name } = ticket.getPayload();
+  const filter = { email };
+  const update = { googleId: sub };
 
-    const client = new OAuth2Client(config.googleClientId);
-    const ticket = await client.verifyIdToken({
-      idToken: tokenId,
-      audience: config.googleClientId,
-    });
-
-    const { email, sub, name, given_name, family_name } = ticket.getPayload();
-    const filter = { email };
-    const update = { googleId: sub };
-
-    let user = await User.findOneAndUpdate(filter, update, {
-      new: true,
-      upsert: true,
-    });
-
-    res.json(userResponse(user));
+  let user = await User.findOneAndUpdate(filter, update, {
+    new: true,
+    upsert: true,
   });
 
-  app.post("/auth/facebook", requireFacebook, async (req, res, next) => {
-    res.json(userResponse(req.user));
-  });
-};
+  res.json(userResponse(user));
+});
+
+auth.post("/auth/facebook", requireFacebook, async (req, res, next) => {
+  res.json(userResponse(req.user));
+});
+
+module.exports = auth;

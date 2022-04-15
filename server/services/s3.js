@@ -59,7 +59,7 @@ const lazilyDeleteBucket = async (bucketId) => {
       return;
     } catch (err) {
       if (err.statusCode === 409 && err.code == "BucketNotEmpty") {
-        await self(2000);
+        await sleep(2000);
         console.log(`Waited ${2 * i} seconds`);
       } else {
         throw err;

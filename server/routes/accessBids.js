@@ -28,9 +28,9 @@ accessBids.get("/:id", requireAdmin, async (req, res, next) => {
 
 accessBids.post("/", async (req, res, next) => {
   try {
-    const { email, message, otherDescription } = req.body;
-    if (!email) {
-      return res.status(400).send("Email is required");
+    const { email, phone, channel, message, otherDescription } = req.body;
+    if (!(email || phone)) {
+      return res.status(400).send("Email or phone number is required");
     }
 
     let formats = FORMATS.reduce((selected, format) => {
@@ -51,7 +51,9 @@ accessBids.post("/", async (req, res, next) => {
       return res.status(400).send("At least one format must be selected");
     }
 
-    let newAccessBid = { email, message, formats };
+    let newAccessBid = !phone
+      ? { email, message, formats }
+      : { email, phone, channel, message, formats };
     const accessBid = await AccessBid.create(newAccessBid);
     res.status(201).send({ accessBid });
   } catch (err) {

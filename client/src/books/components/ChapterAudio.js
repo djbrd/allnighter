@@ -10,13 +10,14 @@ import Footer from "../../components/Footer";
 import useAudio from "../hooks/useAudio";
 import { PLAYBACK_PLAYING } from "../hooks/playbackStates";
 
-import { selectChapterId } from "../selectors";
+import { selectChapterId, selectReadingJumped } from "../selectors";
 
 const Audio = () => {
   const { partIdx, chapterIdx } = useParams();
   const chapterId = useSelector((state) =>
     selectChapterId(state, partIdx, chapterIdx)
   );
+  const jumped = useSelector(selectReadingJumped);
 
   const {
     setPlaybackTime,
@@ -38,7 +39,7 @@ const Audio = () => {
         getPlaybackTime={getPlaybackTime}
         playbackState={playbackState}
       /> */}
-      <Footer stayPut={playbackState === PLAYBACK_PLAYING}>
+      <Footer stayPut={playbackState === PLAYBACK_PLAYING || jumped}>
         <AudioControls
           startPlayback={startPlayback}
           pausePlayback={pausePlayback}

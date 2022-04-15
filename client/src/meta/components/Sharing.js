@@ -1,4 +1,4 @@
-import { Grid, Box } from "@mui/material";
+import { Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
 import {
@@ -26,17 +26,11 @@ const Sharing = () => {
   const url = "https://www.djbrd.com";
   const title = "all-nighter by djbrd";
   const summary =
-    "all-nighter is a novel and audiobook about love at a party in a pair of terraced houses, each with a sound system, in Birmingham in the summer of 1992";
+    "all-nighter is a novel and an audiobook about being young and in love at a party in Birmingham in a pair of terraced houses, each with a sound system, in the summer of 1992";
 
   return (
     <>
-      {/* <Grid
-        container
-        direction="row"
-        justify="space-between"
-        alignItems="center"
-      > */}
-      <Box display="grid" gridTemplateColumns="repeat(6, 1fr)" gap={1} pl={1}>
+      <Box display="grid" gridTemplateColumns="repeat(5, 1fr)" gap={1}>
         <FacebookShareButton url={url} quote={summary}>
           <FacebookIcon size={size} borderRadius={borderRadius} />
         </FacebookShareButton>
@@ -46,14 +40,14 @@ const Sharing = () => {
         >
           <TwitterIcon size={size} borderRadius={borderRadius} />
         </TwitterShareButton>
-        <LinkedinShareButton
-          url={"http://theguardian.com/uk"}
-          // title={title}
-          // summary={summary}
-          // source={"www.djbrd.com"}
+        {/* <LinkedinShareButton
+          url={"www.djbrd.com"}
+          title={title}
+          summary={summary}
+          source={"www.djbrd.com"}
         >
           <LinkedinIcon size={size} borderRadius={borderRadius} />
-        </LinkedinShareButton>
+        </LinkedinShareButton> */}
         <WhatsappShareButton url={url} title={title}>
           <WhatsappIcon size={size} borderRadius={borderRadius} />
         </WhatsappShareButton>
@@ -64,7 +58,6 @@ const Sharing = () => {
           <EmailIcon size={size} borderRadius={borderRadius} />
         </EmailShareButton>
       </Box>
-      {/* </Grid> */}
     </>
   );
 };

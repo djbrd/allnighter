@@ -26,12 +26,16 @@ contacts.get("/:id", requireAdmin, async (req, res, next) => {
 
 contacts.post("/", async (req, res, next) => {
   try {
-    const { email, message } = req.body;
-    if (!email || !message) {
-      return res.status(400).send("Email and message are both required");
+    const { email, phone, channel, message } = req.body;
+    if (!(email || phone) || !message) {
+      return res
+        .status(400)
+        .send("Email or phone number and message are required");
     }
 
-    let newContact = { email, message };
+    let newContact = !phone
+      ? { email, message }
+      : { email, phone, channel, message };
     const contact = await Contact.create(newContact);
     res.status(201).send({ contact });
   } catch (err) {

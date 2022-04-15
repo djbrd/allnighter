@@ -5,20 +5,21 @@ import { ThemeProvider, StyledEngineProvider } from "@mui/material/styles";
 import theme from "../theme.js";
 
 import Header from "./Header";
-import Content from "../books/components/Content";
+import Page from "../common/components/Page";
+import Contents from "../books/components/Contents";
 import ContactForm from "../meta/components/ContactForm.js";
-import CopyAccessForm from "../meta/components/CopyAccessForm.js";
-import SharingPage from "../meta/components/SharingPage.js";
+import CopyForm from "../meta/components/CopyForm.js";
+import AccessForm from "../meta/components/AccessForm.js";
 import ChapterAudio from "../books/components/ChapterAudio";
-
-// import ContentButton from "../meta/components/ContentButton.js";
-
+import BackCover from "../books/components/BackCover.js";
+import Epigraphs from "../books/components/Epigraphs.js";
 import AdminOutlet from "../auth/components/AdminOutlet.js";
 import Books from "../books/components/admin/Books";
 import ChapterSync from "../books/components/admin/ChapterSync";
 import ChapterBreath from "../books/components/admin/ChapterBreath";
 
 import AuthPage from "../auth/components/AuthPage.js";
+import { Typography } from "@material-ui/core";
 
 const HeaderLayout = () => {
   return (
@@ -31,7 +32,11 @@ const HeaderLayout = () => {
 };
 
 const NoMatch = () => {
-  return <p>Page not found</p>;
+  return (
+    <Page>
+      <Typography align="center">Page not found</Typography>
+    </Page>
+  );
 };
 
 const App = () => {
@@ -41,13 +46,15 @@ const App = () => {
         <BrowserRouter>
           <CssBaseline />
           <Routes>
-            <Route index element={<Content />} />
+            <Route index element={<Contents />} />
             <Route element={<HeaderLayout />}>
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/:partIdx/:chapterIdx" element={<ChapterAudio />} />
+              <Route path="/epigraphs" element={<Epigraphs />} />
+              <Route path="/backcover" element={<BackCover />} />
               <Route path="/contact" element={<ContactForm />} />
-              <Route path="/copyaccess" element={<CopyAccessForm />} />
-              <Route path="/sharing" element={<SharingPage />} />
+              <Route path="/copy" element={<CopyForm />} />
+              <Route path="/access" element={<AccessForm />} />
               <Route path="admin" element={<AdminOutlet />}>
                 <Route index element={<Books />} />
                 <Route
@@ -59,8 +66,8 @@ const App = () => {
                   element={<ChapterBreath />}
                 />
               </Route>
+              <Route path="*" element={<NoMatch />} />
             </Route>
-            <Route path="*" element={<NoMatch />} />
           </Routes>
         </BrowserRouter>
       </ThemeProvider>

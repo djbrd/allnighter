@@ -3,8 +3,6 @@ import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import {
-  Button,
-  // Container,
   Typography,
   Box,
   FormControlLabel,
@@ -13,6 +11,7 @@ import {
   FormControl,
   FormLabel,
   FormHelperText,
+  Grid,
 } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 
@@ -22,16 +21,17 @@ import { setErrorsFromResponse } from "../../utils";
 import { api } from "../../utils/api";
 
 import Page from "../../common/components/Page";
+import ContactFragment, { contactSchema } from "./ContactFragment";
 
-const wantedMsgs = [
-  "An invitation will be sent to you by email",
-  "You'll be notified when a book is available",
-  "You'll be notified when an epub is available",
-  "You'll be notified when all-nighter is avaiable in the kindle store",
-  "You'll be notified when recordings are available to download but in the meantime, they are available here with full access",
-  "If you're very special I'll think about working on an another format",
-];
-const options = ["web", "book", "epub", "kindle", "mp3", "other"];
+const wantedMsgs = {
+  book: "You'll be notified when a book becomes available",
+  epub: "You'll be notified when an epub becomes available",
+  kindle:
+    "You'll be notified when all-nighter becomes available in the kindle store",
+  mp3: "You'll be notified when recordings become available to download but in the meantime, they are available here with full access",
+  other: "If you're very special I'll think about working on an another format",
+};
+const options = ["book", "epub", "kindle", "mp3", "other"];
 const optionDefaults = options.reduce((defaults, option) => {
   defaults[option] = false;
   return defaults;
@@ -43,7 +43,6 @@ const optionShapes = options.reduce((shapes, option) => {
 
 const schema = Yup.object()
   .shape({
-    email: Yup.string().required("Required").email(),
     ...optionShapes,
     otherDescription: Yup.string()
       .max(256)
@@ -51,7 +50,6 @@ const schema = Yup.object()
         is: (other) => other === true,
         then: Yup.string().required("Please indicate what other format"),
       }),
-    message: Yup.string().max(4000, "Please make your message a bit shorter"),
   })
   .test("formats", (formats) => {
     if (!options.some((option) => formats[option])) {
@@ -62,15 +60,16 @@ const schema = Yup.object()
       );
     }
     return true;
-  });
+  })
+  .concat(contactSchema);
 
 const useStyles = makeStyles((theme) => ({
   singleInput: {
-    maxWidth: "340px",
+    maxWidth: "50%",
   },
 }));
 
-const CopyAccessForm = (props) => {
+const CopyForm = (props) => {
   const {
     control,
     handleSubmit,
@@ -103,27 +102,26 @@ const CopyAccessForm = (props) => {
 
   // Watch other to prompt text input
   const watchOther = useWatch({ control, name: "other" });
-  const verticalPadding = 8;
 
   const classes = useStyles();
 
   return (
-    // <Container maxWidth="xs" className={classes.container}>
     <Page>
-      <Box pt={verticalPadding} pb={2}>
-        <Typography variant="h1">promo copy/access</Typography>
+      <Box pb={2}>
+        <Typography variant="h1">get a copy</Typography>
       </Box>
       {isSubmitSuccessful ? (
         <>
-          <Box pt={2}>
-            {getCheckedOptions().map((option, index) => {
-              return (
-                <Box pb={2} key={option}>
-                  <Typography>{wantedMsgs[index]}</Typography>
-                </Box>
-              );
-            })}
+          <Box pt={2} pb={2}>
+            <Typography>Thank you for your interest</Typography>
           </Box>
+          {getCheckedOptions().map((option) => {
+            return (
+              <Box pb={2} key={option}>
+                <Typography>{wantedMsgs[option]}</Typography>
+              </Box>
+            );
+          })}
         </>
       ) : (
         <>
@@ -160,47 +158,23 @@ const CopyAccessForm = (props) => {
               )}
             </FormControl>
             {watchOther && (
-              <div className={classes.singleInput}>
-                <Controller
-                  name="otherDescription"
-                  control={control}
-                  render={(props) => (
-                    <ControlledTextField
-                      {...props}
-                      label={"other format"}
-                      required
-                    />
-                  )}
-                />
-              </div>
-            )}
-            <div className={classes.singleInput}>
-              <Controller
-                name="email"
-                control={control}
-                render={(props) => (
-                  <ControlledTextField
-                    {...props}
-                    type="email"
-                    autoFocus
-                    required
+              <Grid container spacing={0}>
+                <Grid item xs={12} sm={6}>
+                  <Controller
+                    name="otherDescription"
+                    control={control}
+                    render={(props) => (
+                      <ControlledTextField
+                        {...props}
+                        label={"other format"}
+                        required
+                      />
+                    )}
                   />
-                )}
-              />
-            </div>
-            <Controller
-              name="message"
-              control={control}
-              render={(props) => (
-                <ControlledTextField {...props} multiline label="message" />
-              )}
-            />
-
-            <Box pt={1} pb={verticalPadding}>
-              <Button type="submit" variant="contained" disabled={isSubmitting}>
-                Submit
-              </Button>
-            </Box>
+                </Grid>
+              </Grid>
+            )}
+            <ContactFragment control={control} isSubmitting={isSubmitting} />
           </form>
           <ErrorSnackbar
             message={errors.form?.message}
@@ -208,9 +182,8 @@ const CopyAccessForm = (props) => {
           />
         </>
       )}
-      {/* </Container> */}
     </Page>
   );
 };
 
-export default CopyAccessForm;
+export default CopyForm;

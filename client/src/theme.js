@@ -19,6 +19,7 @@ let theme = createTheme({
     },
   },
   typography: {
+    // htmlFontSize: 16,
     fontFamily: ["Arial", "sans-serif"].join(","),
     h1: {
       fontWeight: "bold",
@@ -37,6 +38,12 @@ let theme = createTheme({
       letterSpacing: "normal",
       lineHeight: 1.2,
       fontSize: "1.5rem",
+    },
+    h4: {
+      fontWeight: 700,
+      letterSpacing: "normal",
+      lineHeight: 1.2,
+      fontSize: "1.175rem",
     },
   },
 });

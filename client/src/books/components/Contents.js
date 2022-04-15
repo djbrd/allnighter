@@ -5,8 +5,6 @@ import { Collapse, Button, Typography, Box } from "@mui/material";
 
 import makeStyles from "@mui/styles/makeStyles";
 
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 
@@ -18,6 +16,7 @@ import {
 import HoverPopover from "material-ui-popup-state/HoverPopover";
 
 import Page from "../../common/components/Page";
+import RotatingChevron from "../../common/components/RotatingChevron";
 
 import {
   selectFeaturedBook,
@@ -43,13 +42,15 @@ const useStyles = makeStyles((theme) => ({
   chapterListItem: {
     display: "inline",
   },
-  chapterTitle: {
+  link: {
     textTransform: "lowercase",
-    fontSize: "1.17rem",
     fontWeight: "bold",
   },
   emptyChapterText: {
-    color: theme.palette.grey[600],
+    color: theme.palette.grey[700],
+  },
+  otherSections: {
+    color: theme.palette.grey[700],
   },
   popover: {
     pointerEvents: "none",
@@ -64,7 +65,7 @@ const FullChapter = (props) => {
   const classes = useStyles();
   return (
     <Button
-      className={classes.chapterTitle}
+      className={classes.link}
       component={Link}
       to={`/${partIdx}/${index}`}
       color="grey"
@@ -83,11 +84,7 @@ const EmptyChapter = (props) => {
   });
   return (
     <>
-      <Button
-        color="grey"
-        className={classes.chapterTitle}
-        {...bindHover(popupState)}
-      >
+      <Button color="grey" className={classes.link} {...bindHover(popupState)}>
         <Typography variant="h3" className={classes.emptyChapterText}>
           {chapter.title}
         </Typography>
@@ -107,18 +104,6 @@ const EmptyChapter = (props) => {
         <Typography className={classes.popoverText}>Coming soon</Typography>
       </HoverPopover>
     </>
-  );
-};
-
-const RotatingChevron = (props) => {
-  const { open, setOpen } = props;
-  const handleRotate = () => setOpen(!open);
-  const rotate = open ? "rotate(180deg)" : "rotate(0)";
-  return (
-    <ExpandMoreIcon
-      style={{ transform: rotate, transition: "all 0.1s linear" }}
-      onClick={handleRotate}
-    />
   );
 };
 
@@ -161,42 +146,47 @@ const ContentPart = (props) => {
   );
 };
 
-// const UserActions = () => {
-//   const [open, setOpen] = useState(true);
-//   const actions = [
-//     { path: "/contact", heading: "contact" },
-//     { path: "/copyaccess", heading: "copy" },
-//   ];
+const Quotes = () => {
+  const classes = useStyles();
+  return (
+    <>
+      <Box mt={2}>
+        <Button
+          className={classes.link}
+          component={Link}
+          to={"/epigraphs"}
+          color="grey"
+        >
+          <Typography variant="h3" className={classes.otherSections}>
+            epigraphs
+          </Typography>
+        </Button>
+      </Box>
+    </>
+  );
+};
 
-//   const classes = useStyles();
-//   return (
-//     <>
-//       <Box mt={2} display="flex" alignItems="center" flexWrap="wrap">
-//         <Typography component="h2" variant="h2">
-//           appendix
-//         </Typography>
-//         <RotatingChevron open={open} setOpen={setOpen} />
-//       </Box>
-//       <Collapse in={open}>
-//         <ol className={classes.chapterList}>
-//           {actions.map((action, index) => {
-//             return (
-//               <Button
-//                 className={classes.chapterTitle}
-//                 component={Link}
-//                 to={action.path}
-//               >
-//                 <Typography variant="h3">{action.heading}</Typography>
-//               </Button>
-//             );
-//           })}
-//         </ol>
-//       </Collapse>
-//     </>
-//   );
-// };
+const Blurb = () => {
+  const classes = useStyles();
+  return (
+    <>
+      <Box mt={2}>
+        <Button
+          className={classes.link}
+          component={Link}
+          to={"/backcover"}
+          color="grey"
+        >
+          <Typography variant="h3" className={classes.otherSections}>
+            back cover
+          </Typography>
+        </Button>
+      </Box>
+    </>
+  );
+};
 
-const Content = () => {
+const Contents = () => {
   const book = useSelector(selectFeaturedBook);
   const parts = useSelector((state) => selectPartsOfBook(state, book));
 
@@ -204,18 +194,21 @@ const Content = () => {
     <>
       <Header hideTitle={true}></Header>
       <Page>
-        <Box mt={8} mb={3}>
+        <Box mb={3}>
           <Typography component="h1" variant="h1">
             {book.title}
           </Typography>
         </Box>
+        {/* <Box mt={3}>
+          <Quotes />
+        </Box> */}
         <Box>
           {parts.map((part, index) => (
             <ContentPart part={part} partIdx={index} key={index} />
           ))}
         </Box>
         {/* <Box mt={3}>
-          <UserActions />
+          <Blurb />
         </Box> */}
       </Page>
       <Footer />
@@ -224,12 +217,12 @@ const Content = () => {
 };
 
 // Wrap the content so that it's not rendered until the content initialised
-const ContentWrapper = () => {
+const ContentsWrapper = () => {
   return (
     <ContentInitialised>
-      <Content />
+      <Contents />
     </ContentInitialised>
   );
 };
 
-export default ContentWrapper;
+export default ContentsWrapper;

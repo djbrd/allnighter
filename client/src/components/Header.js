@@ -21,11 +21,11 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   side: {
-    flexBasis: "10%",
+    flexBasis: "30%",
     textAlign: "left",
   },
   centre: {
-    flexBasis: "80%",
+    flexBasis: "40%",
     textAlign: "center",
   },
   appbar: {

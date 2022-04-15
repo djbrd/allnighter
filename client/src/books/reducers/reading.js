@@ -12,6 +12,7 @@ import { SIGNED_OUT } from "../../auth/actions/types";
 const INITIAL_STATE = {
   chapterId: -1,
   sentenceIdx: -1,
+  jumped: false,
 };
 
 const reading = (state = INITIAL_STATE, action) => {
@@ -21,8 +22,7 @@ const reading = (state = INITIAL_STATE, action) => {
     }
     case SET_CHAPTER:
       const { chapterId } = action.payload;
-      const sentenceIdx =
-        state.chapterId === chapterId ? state.sentenceIdx : -1;
+      const sentenceIdx = state.chapterId === chapterId ? state.sentenceIdx : 0;
       return {
         ...state,
         chapterId,
@@ -37,11 +37,13 @@ const reading = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         sentenceIdx: -1,
+        jumped: false,
       };
     case NEXT_SENTENCE:
       return {
         ...state,
         sentenceIdx: state.sentenceIdx + 1,
+        jumped: false,
       };
     case PREVIOUS_SENTENCE: {
       return {
@@ -53,6 +55,7 @@ const reading = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         sentenceIdx: action.payload,
+        jumped: true,
       };
     }
     default:

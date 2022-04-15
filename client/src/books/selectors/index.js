@@ -39,30 +39,6 @@ export const selectSentenceStartTimes = (state, chapterId) => {
   return state.content.chapters[chapterId].sentenceStartTimes ?? [];
 };
 
-export const selectReadingPartId = (state) => {
-  const chapterId = state.reading.chapterId;
-  const book = selectFeaturedBook(state);
-  const { parts } = state.content;
-  if (!book) {
-    return null;
-  }
-  if (chapterId === -1) {
-    return book.parts[0];
-  }
-
-  for (let i = 0; i < book.parts.length; ++i) {
-    let partId = book.parts[i];
-    if (parts[partId].chapters.indexOf(chapterId) > -1) {
-      return partId;
-    }
-  }
-  return null;
-};
-
-export const selectReadingSentenceIdx = (state) => {
-  return state.reading.sentenceIdx;
-};
-
 export const selectFeaturedBookId = (state) => {
   const { books } = state.content;
   if (!books) {
@@ -89,4 +65,59 @@ export const selectChapterId = (state, partIdx, chapterIdx) => {
     ? state.content.parts[partId].chapters[chapterIdx]
     : null;
   return chapterId;
+};
+
+export const selectNextChapterIndices = (
+  state,
+  lastPartIdx,
+  lastChapterIdx
+) => {
+  const featuredBook = selectFeaturedBook(state);
+  if (!featuredBook) {
+    return null;
+  }
+  const partId = featuredBook.parts[lastPartIdx];
+  let nextPartIdx = lastPartIdx;
+  let nextChapterIdx = parseInt(lastChapterIdx) + 1;
+  if (nextChapterIdx >= state.content.parts[partId].chapters.length) {
+    nextPartIdx = parseInt(lastPartIdx) + 1;
+    if (featuredBook.parts.length <= nextPartIdx) {
+      return null;
+    }
+    const nextPartId = featuredBook.parts[nextPartIdx];
+    if (!state.content.parts[nextPartId].chapters.length) {
+      return null;
+    }
+    nextChapterIdx = 0;
+  }
+
+  return { nextPartIdx, nextChapterIdx };
+};
+
+export const selectReadingPartId = (state) => {
+  const chapterId = state.reading.chapterId;
+  const book = selectFeaturedBook(state);
+  const { parts } = state.content;
+  if (!book) {
+    return null;
+  }
+  if (chapterId === -1) {
+    return book.parts[0];
+  }
+
+  for (let i = 0; i < book.parts.length; ++i) {
+    let partId = book.parts[i];
+    if (parts[partId].chapters.indexOf(chapterId) > -1) {
+      return partId;
+    }
+  }
+  return null;
+};
+
+export const selectReadingSentenceIdx = (state) => {
+  return state.reading.sentenceIdx;
+};
+
+export const selectReadingJumped = (state) => {
+  return state.reading.jumped;
 };

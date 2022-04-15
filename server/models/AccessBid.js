@@ -4,7 +4,16 @@ const accessBidSchema = new mongoose.Schema(
   {
     email: {
       type: String,
-      required: true,
+      lowercase: true,
+      maxLength: 256,
+    },
+    phone: {
+      type: String,
+      maxLength: 256,
+    },
+    channel: {
+      type: String,
+      maxLength: 16,
     },
     message: {
       type: String,

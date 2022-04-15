@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
-
-import { Box, Typography } from "@mui/material";
+import { Link as RouterLink, useParams } from "react-router-dom";
+import { Box, Typography, Link } from "@mui/material";
 
 import Page from "../../common/components/Page";
 import ContentFailed from "./ContentFailed";
@@ -16,6 +15,29 @@ import {
   selectChapterParagraphs,
   selectChapterTitle,
 } from "../selectors";
+
+const AuthorisedContent = () => {
+  return (
+    <>
+      <Typography paragraph>
+        This content is currently only available to authorised users
+      </Typography>
+      <Typography paragraph>
+        If you would like to be an authorised user, you can request an
+        invitation{" "}
+        <Link component={RouterLink} to="/access">
+          here
+        </Link>
+      </Typography>
+      <Typography paragraph>
+        If you would like a promotional copy, you can request one{" "}
+        <Link component={RouterLink} to="/copy">
+          here
+        </Link>
+      </Typography>
+    </>
+  );
+};
 
 // Handles content of the page
 const ChapterLayout = (props) => {
@@ -57,7 +79,7 @@ const ChapterLayout = (props) => {
 
   return (
     <Page>
-      <Box mt={8} mb={6}>
+      <Box mb={6}>
         <Typography component="h1" variant="h1">
           {title ? title : " "}
         </Typography>
@@ -66,6 +88,8 @@ const ChapterLayout = (props) => {
         <ContentFailed />
       ) : !isContentInitialised || !paragraphs ? (
         <Loading />
+      ) : paragraphs.length === 0 ? (
+        <AuthorisedContent />
       ) : (
         children
       )}

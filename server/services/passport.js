@@ -1,6 +1,5 @@
 const passport = require("passport");
 const User = require("../models/User");
-const config = require("../config/keys");
 const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 const LocalStrategy = require("passport-local");
@@ -35,7 +34,7 @@ const localLogin = new LocalStrategy(localOptions, (email, password, done) => {
 // Setup options for JWT strategy
 const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromHeader("authorization"),
-  secretOrKey: config.secret,
+  secretOrKey: process.env.JWT_SECRET,
 };
 
 // Create JWT strategy
@@ -56,14 +55,13 @@ const jwtLogin = new JwtStrategy(jwtOptions, (payload, done) => {
 
 const facebookStrategy = new FacebookTokenStrategy(
   {
-    clientID: config.facebookAppId,
-    clientSecret: config.facebookAppSecret,
+    clientID: process.env.FACEBOOK_APP_ID,
+    clientSecret: process.env.FACEBOOK_APP_SECRET,
     fbGraphVersion: "v3.0",
   },
   async (accessToken, refreshToken, profile, done) => {
     const filter = { facebookId: profile.id };
     const update = { email: profile._json.email };
-    console.log(profile);
 
     let user = await User.findOneAndUpdate(filter, update, {
       new: true,
