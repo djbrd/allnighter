@@ -1,4 +1,4 @@
-import axios from "axios";
+import { api } from "../../utils/api";
 
 import {
   INIT_CONTENT,
@@ -26,9 +26,12 @@ import {
 
 export const contentInit = () => async (dispatch) => {
   try {
-    const res = await axios.get(
-      `${process.env.REACT_APP_API_URL}/books/title/${process.env.REACT_APP_FEATURED_BOOK_TITLE}`
+    const res = await api.get(
+      `/books/title/${process.env.REACT_APP_FEATURED_BOOK_TITLE}`
     );
+    if (!res.data.book) {
+      throw new Error("Failed to get data to initialise content");
+    }
     dispatch({ type: INIT_CONTENT, payload: [res.data.book] });
   } catch (err) {
     dispatch(initFailure());

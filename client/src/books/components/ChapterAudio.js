@@ -25,7 +25,7 @@ const Audio = () => {
     startPlayback,
     pausePlayback,
     playbackState,
-  } = useAudio(`${process.env.REACT_APP_API_URL}/chapters/${chapterId}/audio`);
+  } = useAudio(`/api/chapters/${chapterId}/audio`);
 
   return (
     <>

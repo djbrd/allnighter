@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import axios from "axios";
+import { api } from "../../utils/api";
 import { useDispatch, useSelector } from "react-redux";
 
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 
@@ -49,10 +49,7 @@ export default function LocalSignIn() {
     try {
       dispatch(signing());
       const path = inNotUp ? "signin" : "signup";
-      const res = await axios.post(
-        `${process.env.REACT_APP_API_URL}/${path}`,
-        data
-      );
+      const res = await api.post(`/${path}`, data);
       dispatch(inNotUp ? signin(res.data) : signup(res.data));
     } catch (e) {
       if (e.response.status === 422) {

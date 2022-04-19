@@ -1,4 +1,4 @@
-import axios from "axios";
+import { api } from "../../utils/api";
 
 import { loadScript } from "../../utils";
 
@@ -91,8 +91,15 @@ export const googleAuthInit = () => async (dispatch) => {
             .getAuthInstance()
             .isSignedIn.listen(onGoogleAuthChange);
         },
-        (err) => console.log("Failed to init auth2: ", err)
-      );
+        (err) => {
+          console.log("Failed to init auth2: ", err);
+          dispatch({ type: SIGNED_OUT, payload: "google" });
+        }
+      )
+      .catch((err) => {
+        console.log("Could not init google auth2: ", err);
+        dispatch({ type: SIGNED_OUT, payload: "google" });
+      });
   });
 };
 
@@ -100,12 +107,9 @@ export const googleAuthInit = () => async (dispatch) => {
 export const googleSignedIn =
   ({ id_token }) =>
   async (dispatch) => {
-    const res = await axios.post(
-      `${process.env.REACT_APP_API_URL}/auth/google`,
-      {
-        tokenId: id_token,
-      }
-    );
+    const res = await api.post("/auth/google", {
+      tokenId: id_token,
+    });
     const { token, userName, admin } = res.data;
     dispatch({
       type: SIGNED_IN,
@@ -151,12 +155,9 @@ export const facebookAuthInit = () => async (dispatch) => {
 export const facebookSignedIn =
   ({ accessToken }) =>
   async (dispatch) => {
-    const res = await axios.post(
-      `${process.env.REACT_APP_API_URL}/auth/facebook`,
-      {
-        access_token: accessToken,
-      }
-    );
+    const res = await api.post("/auth/facebook", {
+      access_token: accessToken,
+    });
     const { token, userName, admin } = res.data;
     dispatch({
       type: SIGNED_IN,

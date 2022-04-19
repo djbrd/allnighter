@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { api } from "../../utils/api";
 import { useSelector, useDispatch } from "react-redux";
 import { Link as RouterLink, useParams } from "react-router-dom";
 import { Box, Typography, Link } from "@mui/material";
@@ -60,9 +60,7 @@ const ChapterLayout = (props) => {
       if (paragraphs === null) {
         const getGetChapterContent = async () => {
           try {
-            const res = await axios(
-              `${process.env.REACT_APP_API_URL}/chapters/${chapterId}`
-            );
+            const res = await api(`/chapters/${chapterId}`);
 
             let { chapter } = res.data;
             dispatch(initChapterBody(chapter));
