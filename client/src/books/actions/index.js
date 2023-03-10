@@ -16,6 +16,7 @@ import {
   SET_SENTENCE_START_TIME,
   SPLIT_SENTENCE,
   MERGE_SENTENCES,
+  CHANGE_SENTENCE,
   START_READING,
   STOP_READING,
   NEXT_SENTENCE,
@@ -134,6 +135,13 @@ export const mergeSentences = (chapterId, paragraphId, sentenceId) => {
   return {
     type: MERGE_SENTENCES,
     payload: { chapterId, paragraphId, sentenceId },
+  };
+};
+
+export const changeSentence = (chapterId, paragraphId, sentenceId, text) => {
+  return {
+    type: CHANGE_SENTENCE,
+    payload: { chapterId, paragraphId, sentenceId, text },
   };
 };
 

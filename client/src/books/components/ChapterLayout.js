@@ -20,17 +20,17 @@ const AuthorisedContent = () => {
   return (
     <>
       <Typography paragraph>
-        This content is currently only available to authorised users
+        This content will only be available to authorised users
       </Typography>
       <Typography paragraph>
-        If you would like to be an authorised user, you can request an
-        invitation{" "}
+        If you would like to read or hear more on this website, please request
+        an invitation{" "}
         <Link component={RouterLink} to="/access">
           here
         </Link>
       </Typography>
       <Typography paragraph>
-        If you would like a promotional copy, you can request one{" "}
+        If you would like a promotional copy, please request one{" "}
         <Link component={RouterLink} to="/copy">
           here
         </Link>

@@ -6,7 +6,7 @@ const BackCover = () => {
     <Page maxReadingWidth={500}>
       <Box sx={{ pt: { sm: 1, md: 2 } }}>
         <Typography paragraph>
-          In the aftermath of the End of History &trade;, back when our current
+          In the aftermath of the End of History&trade;, back when our current
           leaders were young, students in Birmingham are going to celebrate the
           conclusion of another academic year in a pair of terraced houses, each
           with a sound system.

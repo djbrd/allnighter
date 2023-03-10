@@ -13,6 +13,7 @@ export const CLEAR_SENTENCE_START_TIMES = "clear_sentence_start_times";
 export const SET_SENTENCE_START_TIME = "set_sentence_start_time";
 export const SPLIT_SENTENCE = "split_sentence";
 export const MERGE_SENTENCES = "merge_sentences";
+export const CHANGE_SENTENCE = "change_sentence";
 
 export const SET_CHAPTER = "set_chapter";
 export const START_READING = "start_reading";

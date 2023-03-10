@@ -17,6 +17,7 @@ import {
   SET_SENTENCE_START_TIME,
   SPLIT_SENTENCE,
   MERGE_SENTENCES,
+  CHANGE_SENTENCE,
   CREATE_CHAPTER_BODY,
 } from "../actions/types";
 
@@ -138,6 +139,11 @@ const content = produce((draft, action = {}) => {
         sentenceId + 1,
         1
       );
+      break;
+    }
+    case CHANGE_SENTENCE: {
+      const { chapterId, paragraphId, sentenceId, text } = action.payload;
+      draft.chapters[chapterId].paragraphs[paragraphId][sentenceId] = text;
       break;
     }
 

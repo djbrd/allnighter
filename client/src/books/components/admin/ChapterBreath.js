@@ -1,10 +1,12 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 
 import { Typography } from "@mui/material";
 
 import ChapterLayout from "../ChapterLayout";
+import FormDialog from "../../../common/components/FormDialog";
+import SentenceForm from "./SentenceForm";
 
 import { splitSentence, mergeSentences } from "../../actions";
 import { selectChapterId, selectChapterParagraphs } from "../../selectors";
@@ -22,29 +24,35 @@ const backgroundColors = [
 const Sentence = (props) => {
   const { addSpace, text, chapterId, paragraphId, sentenceId, color } = props;
   const dispatch = useDispatch();
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const onSplitSentence = () => {
     if (window.getSelection()) {
-      let idx = window.getSelection().anchorOffset;
-      // Allow error - split at nearest space
-      if (text[idx] !== " ") {
-        let leeway = 1;
-        for (leeway = 1; leeway < 5; ++leeway) {
-          if (text[idx + leeway] === " ") {
-            idx += leeway;
-            break;
+      if (window.getSelection().isCollapsed) {
+        let idx = window.getSelection().anchorOffset;
+        // Allow error - split at nearest space
+        if (text[idx] !== " ") {
+          let leeway = 1;
+          for (leeway = 1; leeway < 5; ++leeway) {
+            if (text[idx + leeway] === " ") {
+              idx += leeway;
+              break;
+            }
+            if (text[idx - leeway] === " ") {
+              idx -= leeway;
+              break;
+            }
           }
-          if (text[idx - leeway] === " ") {
-            idx -= leeway;
-            break;
+          if (leeway === 5) {
+            console.log("Split point not found");
+            return;
           }
         }
-        if (leeway === 5) {
-          console.log("Split point not found");
-          return;
-        }
+        dispatch(splitSentence(chapterId, paragraphId, sentenceId, idx));
+      } else {
+        setDialogOpen(true);
       }
-      dispatch(splitSentence(chapterId, paragraphId, sentenceId, idx));
+    } else {
     }
   };
 
@@ -58,6 +66,15 @@ const Sentence = (props) => {
         {text}
       </span>
       {addSpace ? <span onClick={onMergeSentences}> </span> : ""}
+      <FormDialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+        <SentenceForm
+          onClose={() => setDialogOpen(false)}
+          chapterId={chapterId}
+          paragraphId={paragraphId}
+          sentenceId={sentenceId}
+          text={text}
+        />
+      </FormDialog>
     </>
   );
 };
